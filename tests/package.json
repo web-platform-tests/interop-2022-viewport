@@ -1,0 +1,18 @@
+{
+  "name": "interop-2022-viewport-tests",
+  "version": "1.0.0",
+  "description": "A collection of pages with tests for the Interop 2022 Viewport Investigation Effort",
+  "scripts": {
+    "start": "serve src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "viewports",
+    "interop2022"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serve": "^14.0.1"
+  }
+}

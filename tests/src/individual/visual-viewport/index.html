@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Visual Viewport Debugger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../base.css" />
+
+    <style>
+        html {
+            outline: 10px dashed red;
+            outline-offset: -10px;
+        }
+
+        body {
+            height: 300%;
+            position: relative;
+        }
+
+        .bar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 2em;
+            background: cyan;
+            background-image:
+                linear-gradient(to bottom, darkmagenta 10px, transparent 1px),
+                linear-gradient(to top, slateblue 10px, transparent 1px);
+            background-size: 100% calc(100% / 3);
+        }
+
+        #debug, #visualviewport {
+            position: absolute;
+            top: var(--vvt, 0px);
+            left: var(--vvl, 0px);
+            width: var(--vvw, 100%);
+            height: var(--vvh, 100%);
+            font-size: calc(1em / var(--vvz, 1));
+            
+            pointer-events: none;
+            padding: 1em;
+        }
+
+        #visualviewport {
+            border: 8px solid;
+            border-image: repeating-linear-gradient(
+                45deg,
+                orange,
+                orange 10px,
+                transparent 10px,
+                transparent 20px
+                )
+                10;
+        }
+
+        #debug div {
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+
+        main {
+            position: absolute;
+            right: 10vw;
+            top: 10vh;
+        }
+
+        input {
+            font-size: 16px; /* To prevent auto-zoom on iOS */
+        }
+    </style>
+
+    <script type="module">
+        const INCLUDE_FIXES = true; // Whether to include extra offset or event fixes
+
+        const getVisualViewPortValues = (includeFixes = false) => {
+            let {
+                width,
+                height,
+                scale,
+                offsetTop,
+                offsetLeft,
+                pageLeft,
+                pageTop,
+                widthOrig = null,
+                heightOrig = null,
+                pageLeftOrig = null,
+                pageTopOrig = null,
+            } = window.visualViewport;
+
+            if (includeFixes) {
+                // Cache original values
+                widthOrig = width;
+                heightOrig = height;
+                pageTopOrig = pageTop;
+                pageLeftOrig = pageLeft;
+
+                // (Safari) Adjust width/height when overscrolling.
+                // Otherwise it might bleed out the body, creating a
+                // scrollbar and allowing you to scroll infinitely
+                if (width + pageLeft > document.body.offsetWidth) {
+                    width = document.body.offsetWidth - pageLeft;
+                }
+                if (height + pageTop > document.body.offsetHeight) {
+                    height = document.body.offsetHeight - pageTop;
+                }
+                if (pageLeft < 0) {
+                    width += pageLeft;
+                }
+                if (pageTop < 0) {
+                    height += pageTop;
+                }
+
+                // (Safari) vv.pageTop / vv.pageLeft are offset against the
+                // layout viewport. Therefore it should not become negative
+                pageTop = Math.max(pageTop, 0);
+                pageLeft = Math.max(pageLeft, 0);
+            }
+
+            return Object.fromEntries(
+                Object.entries({
+                    width,
+                    widthOrig,
+                    height,
+                    heightOrig,
+                    scale,
+                    offsetTop,
+                    offsetLeft,
+                    pageLeft,
+                    pageLeftOrig,
+                    pageTop,
+                    pageTopOrig,
+                })
+                .filter(([k, v]) => v !== null)
+            );
+        };
+
+        const syncVisualViewportValuesToCustomProperties = (e) => {
+            const vv = getVisualViewPortValues(INCLUDE_FIXES);
+            document.documentElement.style.setProperty('--vvw', `${vv.width}px`);
+            document.documentElement.style.setProperty('--vvh', `${vv.height}px`);
+            document.documentElement.style.setProperty('--vvt', `${vv.pageTop}px`);
+            document.documentElement.style.setProperty('--vvl', `${vv.pageLeft}px`);
+            document.documentElement.style.setProperty('--vvz', vv.scale);
+        }
+        window.addEventListener('scroll', syncVisualViewportValuesToCustomProperties, { passive: true });
+        window.visualViewport.addEventListener('scroll', syncVisualViewportValuesToCustomProperties, { passive: true });
+        window.visualViewport.addEventListener('resize', syncVisualViewportValuesToCustomProperties, { passive: true });
+        setTimeout(syncVisualViewportValuesToCustomProperties, 100);
+
+        const writeVisualViewportValues = (e) => {
+            const vv = getVisualViewPortValues(INCLUDE_FIXES);
+            document.querySelector("#vv-values").innerText = JSON.stringify(vv, null, 4);
+        }
+
+        window.addEventListener('scroll', writeVisualViewportValues, { passive: true });
+        window.visualViewport.addEventListener('scroll', writeVisualViewportValues, { passive: true });
+        window.visualViewport.addEventListener('resize', writeVisualViewportValues, { passive: true });
+        setTimeout(writeVisualViewportValues, 100);
+    </script>
+</head>
+
+<body translate="no">
+    <div class="bar"></div>
+    <main>
+        <input type="text" />
+    </main>
+    <div id="debug">
+        <h1>Visual Viewport Debugger</h1>
+        <p>Legend:</p>
+        <ul>
+            <li>Red dashed line = ICB</li>
+            <li>Orange slanted line = Visual Viewport <i>(using position absolute)</i></li>
+        </ul>
+        <p><i>Expected Behavior: Orange lines should always be visible and touch the edges of the visible space. Can lag.</i></p>
+        <div id="vv-values"></div>
+        <div id="eventlog"></div>
+    </div>
+    <div id="visualviewport"></div>
+</body>
+</html>

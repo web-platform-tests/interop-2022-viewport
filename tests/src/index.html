@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Visual Keyboard Debugger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="base.css" />
+    <style>
+        body {
+            padding: 1rem;
+            display: flex;
+        }
+
+        main {
+            width: 100%;
+            max-width: 80ch;
+            margin: 0 auto;
+            background: rgb(255 255 255 / 0.5);
+			border: 1px solid rgb(0 0 0 / 0.2);
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body translate="no">
+    <main>
+        <h1>Interop 2022: Viewport: Tests</h1>
+
+        <h2>Individual Tests</h2>
+        <ol>
+            <li><a href="individual/icb/">ICB</a></li>
+            <li><a href="individual/layout-viewport/">Layout Viewport</a></li>
+            <li><a href="individual/visual-viewport/">Visual Viewport</a></li>
+            <li><a href="individual/virtual-keyboard/">Virtual Keyboard</a></li>
+        </ol>
+
+        <h2>Combined Tests</h2>
+        <ol>
+            <li>
+				<a href="combined/viewport-units/">Viewport Units + <code>window.innerHeight</code></a><br>
+				<small><i>(Adapted from <a href="https://bokand.github.io/demo/urlbarsize.html">https://bokand.github.io/demo/urlbarsize.html</a>)</i></small>
+			</li>
+            <li><a href="combined/icb-fixed-visual/">ICB + Fixed Viewport + Visual Viewport</a></li>
+        </ol>
+    </main>
+</body>

@@ -1,0 +1,30 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+	background-color: aliceblue;
+    background-image:
+		linear-gradient(to right, rgb(0 0 0 / 0.05) 1px, transparent 1px),
+		linear-gradient(to bottom, rgb(0 0 0 / 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+ul, ol {
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	padding-inline-start: 2em;
+}
+
+li {
+	margin-block-end: 0.2em;
+}
