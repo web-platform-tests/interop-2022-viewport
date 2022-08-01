@@ -28,3 +28,60 @@ ul, ol {
 li {
 	margin-block-end: 0.2em;
 }
+
+/* The Options Box */
+#options[open] {
+	padding: 1em;
+	background-color: white;
+	border-radius: 1em;
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+}
+
+#options[open]::backdrop {
+	backdrop-filter: blur(0.5em);
+}
+
+#options header {
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: space-between;
+}
+
+#options header > * {
+	margin: 0;
+}
+
+#options section {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	justify-content: flex-start;
+	overflow-y: scroll;
+}
+
+.option {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+.option input[type="checkbox"] {
+	width: 2em;
+	height: 2em;
+}
+
+:disabled + label {
+	text-decoration: line-through;
+}
+
+#btnOptions {
+	position: fixed;
+	right: 1em;
+	top: 1em;
+}
+
+.hidden {
+	display: none !important;
+}
