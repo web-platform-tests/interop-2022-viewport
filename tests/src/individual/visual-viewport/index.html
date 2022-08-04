@@ -80,8 +80,6 @@
                 offsetLeft,
                 pageLeft,
                 pageTop,
-                widthOrig = null,
-                heightOrig = null,
                 pageLeftOrig = null,
                 pageTopOrig = null,
             } = window.visualViewport;
@@ -89,43 +87,36 @@
             // Include fixes?
             if (document.querySelectorAll('.option :checked').length > 0) {
                 // Cache original values
-                widthOrig = width;
-                heightOrig = height;
                 pageTopOrig = pageTop;
                 pageLeftOrig = pageLeft;
 
-                // (Safari) Adjust width/height when overscrolling.
-                // Otherwise it might bleed out the body, creating a
-                // scrollbar and allowing you to scroll infinitely
-                if (document.querySelector('#fixTooHigh').checked) {
-                    if (width + pageLeft > document.body.offsetWidth) {
-                        width = document.body.offsetWidth - pageLeft;
-                    }
-                    if (height + pageTop > document.body.offsetHeight) {
-                        height = document.body.offsetHeight - pageTop;
-                    }
-                    if (pageLeft < 0) {
-                        width += pageLeft;
-                    }
-                    if (pageTop < 0) {
-                        height += pageTop;
-                    }
-                }
+                // Visual Viewport is measured against the Fixed Viewport.
+                // Therefore it should be clamped between 0 and the max scroll
+                // position on the axis
 
-                // (Safari) vv.pageTop / vv.pageLeft are offset against the
-                // layout viewport. Therefore it should not become negative
+                // Prevent too low (i.e. negative) values
                 if (document.querySelector('#fixTooLow').checked) {
                     pageTop = Math.max(pageTop, 0);
                     pageLeft = Math.max(pageLeft, 0);
+                }
+
+                // Prevent too larges values
+                // If not clamped, the positioned element might bleed out the body,
+                // expanding it, resulting in an infinite scroll
+                if (document.querySelector('#fixTooHigh').checked) {
+                    if (width + pageLeft > document.body.offsetWidth) {
+                        pageLeft = document.body.offsetWidth - width;
+                    }
+                    if (height + pageTop > document.body.offsetHeight) {
+                        pageTop = document.body.offsetHeight - height;
+                    }
                 }
             }
 
             return Object.fromEntries(
                 Object.entries({
                     width,
-                    widthOrig,
                     height,
-                    heightOrig,
                     scale,
                     offsetTop,
                     offsetLeft,
@@ -205,8 +196,8 @@
         </header>
         <section>
             <h3>Fixes:</h3>
-            <div class="option"><input type="checkbox" id="fixTooLow" name="fixTooLow" checked /><label for="fixTooLow">(Safari) Prevent Visual Viewport page offsets from becoming too low (negative)</label></div>
-            <div class="option"><input type="checkbox" id="fixTooHigh" name="fixTooHigh" checked /><label for="fixTooHigh">(Safari) Prevent Visual Viewport page offsets from becoming too high</label></div>
+            <div class="option"><input type="checkbox" id="fixTooLow" name="fixTooLow" checked /><label for="fixTooLow">Prevent Visual Viewport page offsets from becoming too low (negative)</label></div>
+            <div class="option"><input type="checkbox" id="fixTooHigh" name="fixTooHigh" checked /><label for="fixTooHigh">Prevent Visual Viewport page offsets from becoming too high</label></div>
             <h3>Misc:</h3>
             <div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
         </section>
