@@ -32,8 +32,8 @@
 
         #debug, #visualviewport {
             position: absolute;
-            top: var(--vvt, 0px);
-            left: var(--vvl, 0px);
+            top: var(--vvpt, 0px);
+            left: var(--vvpl, 0px);
             width: var(--vvw, 100%);
             height: var(--vvh, 100%);
             font-size: calc(1em / var(--vvz, 1));
@@ -71,10 +71,14 @@
     </style>
 
     <script type="module">
+        const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+
         const getVisualViewPortValues = () => {
             let {
                 width,
                 height,
+                widthOrig = null,
+                heightOrig = null,
                 scale,
                 offsetTop,
                 offsetLeft,
@@ -84,39 +88,47 @@
                 pageTopOrig = null,
             } = window.visualViewport;
 
-            // Include fixes?
-            if (document.querySelectorAll('.option :checked').length > 0) {
+            // Adjust values by clamping
+            if (document.querySelectorAll('#vvAdjustValuesByClamping:checked').length > 0) {
                 // Cache original values
                 pageTopOrig = pageTop;
                 pageLeftOrig = pageLeft;
+                
+                // Adjust values
+                pageTop = clamp(pageTop, 0, document.body.offsetHeight - height);
+                pageLeft = clamp(pageLeft, 0, document.body.offsetWidth - width);
+            }
 
-                // Visual Viewport is measured against the Fixed Viewport.
-                // Therefore it should be clamped between 0 and the max scroll
-                // position on the axis
+            // Adjust values by resizing height/width
+            if (document.querySelectorAll('#vvAdjustValuesByResizing:checked').length > 0) {
+                widthOrig = width;
+                heightOrig = height;
+                pageTopOrig = pageTop;
+                pageLeftOrig = pageLeft;
 
-                // Prevent too low (i.e. negative) values
-                if (document.querySelector('#fixTooLow').checked) {
-                    pageTop = Math.max(pageTop, 0);
-                    pageLeft = Math.max(pageLeft, 0);
+                if (width + pageLeft > document.body.offsetWidth) {
+                    width = document.body.offsetWidth - pageLeft;
+                }
+                if (height + pageTop > document.body.offsetHeight) {
+                    height = document.body.offsetHeight - pageTop;
+                }
+                if (pageLeft < 0) {
+                    width += pageLeft;
+                    pageLeft = 0;
+                }
+                if (pageTop < 0) {
+                    height += pageTop;
+                    pageTop = 0;
                 }
 
-                // Prevent too larges values
-                // If not clamped, the positioned element might bleed out the body,
-                // expanding it, resulting in an infinite scroll
-                if (document.querySelector('#fixTooHigh').checked) {
-                    if (width + pageLeft > document.body.offsetWidth) {
-                        pageLeft = document.body.offsetWidth - width;
-                    }
-                    if (height + pageTop > document.body.offsetHeight) {
-                        pageTop = document.body.offsetHeight - height;
-                    }
-                }
             }
 
             return Object.fromEntries(
                 Object.entries({
                     width,
+                    widthOrig,
                     height,
+                    heightOrig,
                     scale,
                     offsetTop,
                     offsetLeft,
@@ -132,8 +144,10 @@
         const syncVisualViewportValuesToCustomProperties = (vvv) => {
             document.documentElement.style.setProperty('--vvw', `${vvv.width}px`);
             document.documentElement.style.setProperty('--vvh', `${vvv.height}px`);
-            document.documentElement.style.setProperty('--vvt', `${vvv.pageTop}px`);
-            document.documentElement.style.setProperty('--vvl', `${vvv.pageLeft}px`);
+            document.documentElement.style.setProperty('--vvpt', `${vvv.pageTop}px`);
+            document.documentElement.style.setProperty('--vvpl', `${vvv.pageLeft}px`);
+            document.documentElement.style.setProperty('--vvot', `${vvv.offsetTop}px`);
+            document.documentElement.style.setProperty('--vvol', `${vvv.offsetLeft}px`);
             document.documentElement.style.setProperty('--vvz', vvv.scale);
         }
 
@@ -215,10 +229,11 @@
             <h1>Options</h1>
         </header>
         <section>
-            <h3>Fixes:</h3>
-            <div class="option"><input type="checkbox" id="fixTooLow" name="fixTooLow" checked /><label for="fixTooLow">Prevent Visual Viewport page offsets from becoming too low (negative)</label></div>
-            <div class="option"><input type="checkbox" id="fixTooHigh" name="fixTooHigh" checked /><label for="fixTooHigh">Prevent Visual Viewport page offsets from becoming too high</label></div>
-            <h3>Misc:</h3>
+            <h3>Visual Viewport</h3>
+            <div class="option"><input type="radio" id="vvAdjustValuesNo" name="vvAdjustValues" checked /><label for="vvAdjustValuesNo">Do not adjust values when overscrolling</label></div>
+            <div class="option"><input type="radio" id="vvAdjustValuesByClamping" name="vvAdjustValues" /><label for="vvAdjustValuesByClamping">Clamp values between 0 and max scroll when overscrolling</label></div>
+            <div class="option"><input type="radio" id="vvAdjustValuesByResizing" name="vvAdjustValues" /><label for="vvAdjustValuesByResizing">Shrink height/width when overscrolling</label></div>
+            <h3>Virtual Keyboard</h3>
             <div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
         </section>
     </dialog>
