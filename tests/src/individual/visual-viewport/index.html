@@ -73,7 +73,7 @@
     <script type="module">
         const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
-        const getVisualViewPortValues = () => {
+        const getVisualViewPortValues = ({ clampOffsets = false, resizeDimensions = false }) => {
             let {
                 width,
                 height,
@@ -89,7 +89,7 @@
             } = window.visualViewport;
 
             // Adjust values by clamping
-            if (document.querySelectorAll('#vvAdjustValuesByClamping:checked').length > 0) {
+            if (clampOffsets) {
                 // Cache original values
                 pageTopOrig = pageTop;
                 pageLeftOrig = pageLeft;
@@ -100,7 +100,7 @@
             }
 
             // Adjust values by resizing height/width
-            if (document.querySelectorAll('#vvAdjustValuesByResizing:checked').length > 0) {
+            if (resizeDimensions) {
                 widthOrig = width;
                 heightOrig = height;
                 pageTopOrig = pageTop;
@@ -141,18 +141,18 @@
             );
         };
 
-        const syncVisualViewportValuesToCustomProperties = (vvv) => {
-            document.documentElement.style.setProperty('--vvw', `${vvv.width}px`);
-            document.documentElement.style.setProperty('--vvh', `${vvv.height}px`);
-            document.documentElement.style.setProperty('--vvpt', `${vvv.pageTop}px`);
-            document.documentElement.style.setProperty('--vvpl', `${vvv.pageLeft}px`);
-            document.documentElement.style.setProperty('--vvot', `${vvv.offsetTop}px`);
-            document.documentElement.style.setProperty('--vvol', `${vvv.offsetLeft}px`);
-            document.documentElement.style.setProperty('--vvz', vvv.scale);
+        const syncVisualViewportValuesToCustomProperties = (vvv, $el = document.documentElement) => {
+            $el.style.setProperty('--vvw', `${vvv.width}px`);
+            $el.style.setProperty('--vvh', `${vvv.height}px`);
+            $el.style.setProperty('--vvpt', `${vvv.pageTop}px`);
+            $el.style.setProperty('--vvpl', `${vvv.pageLeft}px`);
+            $el.style.setProperty('--vvot', `${vvv.offsetTop}px`);
+            $el.style.setProperty('--vvol', `${vvv.offsetLeft}px`);
+            $el.style.setProperty('--vvz', vvv.scale);
         }
 
-        const writeVisualViewportValues = (vvv) => {
-            document.querySelector("#vv-values").innerText = JSON.stringify(vvv, null, 4);
+        const writeVisualViewportValues = (vvv, $el) => {
+            $el.innerText = JSON.stringify(vvv, null, 4);
         }
 
         const getScrollValues = () => {
@@ -167,17 +167,20 @@
             };
         }
 
-        const writeScrollValues = (sv) => {
-            document.querySelector("#s-values").innerText = JSON.stringify(sv, null, 4);
+        const writeScrollValues = (sv, $el) => {
+            $el.innerText = JSON.stringify(sv, null, 4);
         }
 
         const update = (e) => {
-            const vvv = getVisualViewPortValues();
+            const vvv = getVisualViewPortValues({
+                clampOffsets: document.querySelectorAll('#vvAdjustValuesByClamping:checked').length > 0,
+                resizeDimensions: document.querySelectorAll('#vvAdjustValuesByResizing:checked').length > 0,
+            });
             syncVisualViewportValuesToCustomProperties(vvv);
-            writeVisualViewportValues(vvv);
+            writeVisualViewportValues(vvv, document.querySelector("#vv-values"));
 
             const sv = getScrollValues();
-            writeScrollValues(sv);
+            writeScrollValues(sv, document.querySelector("#s-values"));
         };
 
         // Show/Hide Options Dialog
