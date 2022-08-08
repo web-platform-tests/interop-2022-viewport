@@ -37,6 +37,7 @@ li {
 	display: flex;
 	flex-direction: column;
 	gap: 1em;
+	max-width: 80ch;
 }
 
 #options[open]::backdrop {
@@ -61,13 +62,17 @@ li {
 	overflow-y: scroll;
 }
 
+#options section :is(p, ul) {
+	margin-top: 0;
+}
+
 .option {
 	display: flex;
 	align-items: center;
 	gap: 0.5em;
 }
 
-.option input[type="checkbox"] {
+.option :is(input[type="checkbox"], input[type="radio"]) {
 	width: 2em;
 	height: 2em;
 }
