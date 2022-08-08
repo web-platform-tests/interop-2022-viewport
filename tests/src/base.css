@@ -36,7 +36,7 @@ li {
 	border-radius: 1em;
 	display: flex;
 	flex-direction: column;
-	gap: 1em;
+	gap: 2rem;
 	max-width: 80ch;
 }
 
@@ -48,6 +48,7 @@ li {
 	display: flex;
 	flex-direction: row-reverse;
 	justify-content: space-between;
+	align-items: center;
 }
 
 #options header > * {
@@ -62,8 +63,12 @@ li {
 	overflow-y: scroll;
 }
 
-#options section :is(p, ul) {
-	margin-top: 0;
+#options :is(h1, h2, h3, h4, h5, h6) {
+	margin: 0;
+}
+
+#options section > p {
+	margin: 1em 0 0.25em 0;
 }
 
 .option {
