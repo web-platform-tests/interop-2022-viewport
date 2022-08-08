@@ -129,22 +129,41 @@
             );
         };
 
-        const syncVisualViewportValuesToCustomProperties = (vv) => {
-            document.documentElement.style.setProperty('--vvw', `${vv.width}px`);
-            document.documentElement.style.setProperty('--vvh', `${vv.height}px`);
-            document.documentElement.style.setProperty('--vvt', `${vv.pageTop}px`);
-            document.documentElement.style.setProperty('--vvl', `${vv.pageLeft}px`);
-            document.documentElement.style.setProperty('--vvz', vv.scale);
+        const syncVisualViewportValuesToCustomProperties = (vvv) => {
+            document.documentElement.style.setProperty('--vvw', `${vvv.width}px`);
+            document.documentElement.style.setProperty('--vvh', `${vvv.height}px`);
+            document.documentElement.style.setProperty('--vvt', `${vvv.pageTop}px`);
+            document.documentElement.style.setProperty('--vvl', `${vvv.pageLeft}px`);
+            document.documentElement.style.setProperty('--vvz', vvv.scale);
         }
 
-        const writeVisualViewportValues = (vv) => {
-            document.querySelector("#vv-values").innerText = JSON.stringify(vv, null, 4);
+        const writeVisualViewportValues = (vvv) => {
+            document.querySelector("#vv-values").innerText = JSON.stringify(vvv, null, 4);
+        }
+
+        const getScrollValues = () => {
+            let {
+                scrollX,
+                scrollY,
+            } = window;
+
+            return {
+                scrollX,
+                scrollY,
+            };
+        }
+
+        const writeScrollValues = (sv) => {
+            document.querySelector("#s-values").innerText = JSON.stringify(sv, null, 4);
         }
 
         const update = (e) => {
-            const vv = getVisualViewPortValues();
-            syncVisualViewportValuesToCustomProperties(vv);
-            writeVisualViewportValues(vv);
+            const vvv = getVisualViewPortValues();
+            syncVisualViewportValuesToCustomProperties(vvv);
+            writeVisualViewportValues(vvv);
+
+            const sv = getScrollValues();
+            writeScrollValues(sv);
         };
 
         // Show/Hide Options Dialog
@@ -184,6 +203,7 @@
         </ul>
         <p><i>Expected Behavior: Orange lines should always be visible and touch the edges of the visible space. Can lag.</i></p>
         <div id="vv-values"></div>
+        <div id="s-values"></div>
         <div id="eventlog"></div>
     </div>
     <div id="visualviewport"></div>
