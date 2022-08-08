@@ -4,6 +4,7 @@
   "description": "A collection of pages with tests for the Interop 2022 Viewport Investigation Effort",
   "scripts": {
     "start": "serve src",
+	"deploy": "netlify deploy --prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
