@@ -6,70 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../../base.css" />
 
-    <style>
-        html {
-            outline: 10px dashed red;
-            outline-offset: -10px;
-        }
-
-        body {
-            height: 300%;
-        }
-
-        #debug {
-            position: absolute;
-            top: var(--vvt, 0px);
-            left: var(--vvl, 0px);
-            width: var(--vvw, 100%);
-            height: var(--vvh, 100%);
-            pointer-events: none;
-
-            padding: 1em;
-            font-size: calc(1em / var(--vvz, 1));
-        }
-
-        #debug div {
-            white-space: pre-wrap;
-            font-family: monospace;
-        }
-
-        main {
-            position: absolute;
-            right: 10vw;
-            top: 10vh;
-        }
-
-        input {
-            font-size: 16px; /* To prevent auto-zoom on iOS */
-        }
-    </style>
-
     <script type="module">
-        const syncVisualViewportValuesToCustomProperties = (e) => {
-            const vv = window.visualViewport;
-            document.documentElement.style.setProperty('--vvw', `${vv.width}px`);
-            document.documentElement.style.setProperty('--vvh', `${vv.height}px`);
-            document.documentElement.style.setProperty('--vvt', `${vv.pageTop}px`);
-            document.documentElement.style.setProperty('--vvl', `${vv.pageLeft}px`);
-            document.documentElement.style.setProperty('--vvz', vv.scale);
-        }
-        window.addEventListener('scroll', syncVisualViewportValuesToCustomProperties, { passive: true });
-        window.visualViewport.addEventListener('scroll', syncVisualViewportValuesToCustomProperties, { passive: true });
-        window.visualViewport.addEventListener('resize', syncVisualViewportValuesToCustomProperties, { passive: true });
-        syncVisualViewportValuesToCustomProperties();
+        import * as core from '../../core.js';
+
+        const update = () => {
+            document.body.setAttribute('data-vv-positioning', document.querySelector('[name="vvPosition"]:checked')?.value ?? 'absolute');
+
+            const vvv = core.getVisualViewPortValues({
+                clampOffsets: true,
+            });
+            core.syncVisualViewportValuesToCustomProperties(vvv);
+        };
+
+        core.init(update);
     </script>
 </head>
 
 <body translate="no">
-    <main>
-        <input type="text" />
-    </main>
+    <div id="inputwrapper"><input type="text" /></div>
     <div id="debug">
         <h1>ICB Debugger</h1>
-        <p>Legend:</p>
-        <ul>
-            <li>Red dashed line = ICB</li>
-        </ul>
     </div>
+
+    <div class="heightdebugger"></div>
+
+    <button id="btnOptions">options</button>
+    <dialog id="options">
+        <header>
+            <button id="btnOptionsClose">close</button>
+            <h1>Options</h1>
+        </header>
+        <section>
+            <h3>Virtual Keyboard</h3>
+            <div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
+        </section>
+    </dialog>
 </body>
 </html>

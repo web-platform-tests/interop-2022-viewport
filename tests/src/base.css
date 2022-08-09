@@ -11,14 +11,106 @@ html, body {
     width: 100%;
 }
 
+/* This code effectively outlines the ICB */
+html {
+	outline: 10px dashed red;
+	outline-offset: -10px;
+}
+
 body {
 	background-color: aliceblue;
     background-image:
 		linear-gradient(to right, rgb(0 0 0 / 0.05) 1px, transparent 1px),
 		linear-gradient(to bottom, rgb(0 0 0 / 0.05) 1px, transparent 1px);
     background-size: 50px 50px;
+	height: 300%; /* Add some scroll estate */
+	position: relative;
+}
+/* Element that goes vertically and indicates the start and end of each 100% block */
+.heightdebugger {
+	position: absolute;
+	top: 0;
+	left: calc(50% - 1em);
+	bottom: 0;
+	width: 2em;
+	background: cyan;
+	background-image:
+		linear-gradient(to bottom, darkmagenta 10px, transparent 1px),
+		linear-gradient(to top, slateblue 10px, transparent 1px);
+	background-size: 100% calc(100% / 3);
+	z-index: -1;
 }
 
+/* To prevent auto-zoom on iOS */
+input {
+	font-size: 16px;
+}
+
+#debug,
+#visualviewport,
+#layoutviewport {    
+	padding: 1em;
+	overflow-y: hidden;
+}
+
+[id$="-values"],
+#visualviewport,
+#layoutviewport {
+	pointer-events: none;
+}
+
+#layoutviewport {
+	position: fixed;
+	inset: 0;
+	border: 5px dotted blue;
+	z-index: 999;
+}
+
+#debug,
+[data-vv-positioning="absolute"] #visualviewport {
+	position: absolute;
+	top: var(--vvpt, 0px);
+	left: var(--vvpl, 0px);
+	width: var(--vvw, 100%);
+	height: var(--vvh, 100vh);
+	font-size: calc(1em / var(--vvz, 1));
+}
+
+[data-vv-positioning="fixed"] #visualviewport {
+	position: fixed;
+	top: var(--vvot, 0px);
+	left: var(--vvol, 0px);
+	width: var(--vvw, 100%);
+	height: var(--vvh, 100v);
+	right: var(--vvol, 0px) + var(--vvw, 0px);
+	bottom: var(--vvol, 0px) + var(--vvh, 0px);
+}
+
+#visualviewport {
+	border: 8px solid;
+	border-image: repeating-linear-gradient(
+		45deg,
+		orange,
+		orange 10px,
+		transparent 10px,
+		transparent 20px
+		)
+		10;
+}
+
+#debug div {
+	white-space: pre-wrap;
+	font-family: monospace;
+}
+
+#inputwrapper {
+	position: absolute;
+	right: 10vw;
+	top: 20vh;
+	z-index: 999;
+}
+
+/* Tweak Lists */
 ul, ol {
 	margin-block-start: 1em;
 	margin-block-end: 1em;
@@ -84,6 +176,8 @@ li {
 
 :disabled + label {
 	text-decoration: line-through;
+	cursor: not-allowed;
+	user-select: none;
 }
 
 #btnOptions {

@@ -7,25 +7,39 @@
     <link rel="stylesheet" href="base.css" />
     <style>
         body {
-            padding: 1rem;
             display: flex;
         }
 
         main {
-            width: 100%;
             max-width: 80ch;
+            width: 90%;
             margin: 0 auto;
             background: rgb(255 255 255 / 0.5);
 			border: 1px solid rgb(0 0 0 / 0.2);
             padding: 1rem;
+			margin: 3rem auto;
         }
     </style>
+    <script type="module">
+        import * as core from './core.js';
+
+        const update = () => {
+            document.body.setAttribute('data-vv-positioning', document.querySelector('[name="vvPosition"]:checked')?.value ?? 'absolute');
+
+            const vvv = core.getVisualViewPortValues({
+                clampOffsets: true,
+            });
+            core.syncVisualViewportValuesToCustomProperties(vvv);
+        };
+
+        core.init(update);
+    </script>
 </head>
-<body translate="no">
+<body translate="no" data-vv-positioning="absolute">
     <main>
         <h1>Interop 2022: Viewport: Tests</h1>
 
-        <h2>Individual Tests</h2>
+        <h2>Individual Viewports and friends</h2>
         <ol>
             <li><a href="individual/icb/">ICB</a></li>
             <li><a href="individual/layout-viewport/">Layout Viewport</a></li>
@@ -33,13 +47,33 @@
             <li><a href="individual/virtual-keyboard/">Virtual Keyboard</a></li>
         </ol>
 
-        <h2>Combined Tests</h2>
+        <h2>Viewport Units</h2>
         <ol>
             <li>
 				<a href="combined/viewport-units/">Viewport Units + <code>window.innerHeight</code></a><br>
 				<small><i>(Adapted from <a href="https://bokand.github.io/demo/urlbarsize.html">https://bokand.github.io/demo/urlbarsize.html</a>)</i></small>
 			</li>
-            <li><a href="combined/icb-fixed-visual/">ICB + Fixed Viewport + Visual Viewport</a></li>
+            <li>
+                <a href="http://smfr.org/misc/viewport-units.html">Viewport Units + <code>-webkit-fill-available</code></a>
+            </li>
         </ol>
+
+        <h2>Events / All-in-one</h2>
+
+        <ul>
+            <li><a href="combined/icb-fixed-visual/">ICB + Fixed Viewport + Visual Viewport</a></li>
+        </ul>
+
+		<h2>Legend</h2>
+		<ul>
+			<li>Red dashed line = ICB</li>
+			<li>Blue dotted line = Layout Viewport</li>
+			<li>Orange slanted line = Visual Viewport</li>
+		</ul>
     </main>
+
+    <div id="visualviewport"></div>
+    <div id="layoutviewport"></div>
+
+    <div class="heightdebugger"></div>
 </body>
