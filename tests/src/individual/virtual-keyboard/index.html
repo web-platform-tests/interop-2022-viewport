@@ -7,15 +7,20 @@
     <link rel="stylesheet" href="../../base.css" />
 
     <style>
-        #fakevk {
+        #vkdebugger,
+        #vkdebugger::before {
             box-sizing: content-box;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             height: env(keyboard-inset-height, 0px);
-            border-top: 1em dotted #666;
             background: grey;
+        }
+
+        #vkdebugger::before {
+            content: '';
+            border-top: 1em dotted #666;
         }
     </style>
 
@@ -30,6 +35,9 @@
                 resizeDimensions: document.querySelectorAll('#vvAdjustValuesByResizing:checked').length > 0,
             });
             core.syncVisualViewportValuesToCustomProperties(vvv);
+            core.write(vvv, document.querySelector("#vv-values"), 'Visual Viewport');
+
+            // @note Virtual Keyboard Code Hooks and Values via core.init
         };
 
         core.init(update);
@@ -43,10 +51,14 @@
         <p>To see how the Visual Viewport is affected, please refer to the <a href="../visual-viewport/">Visual Viewport Test Page</a></p>
 
         <div id="vk-values"></div>
-        <div id="fakevk-values"></div>
+        <div id="vkdebugger-values"></div>
+        <div id="lv-values"></div>
+        <div id="icb-values"></div>
+        <div id="vv-values"></div>
+        <div id="window-values"></div>
     </div>
 
-    <div id="fakevk"></div>
+    <div id="vkdebugger"></div>
     <div class="heightdebugger"></div>
 
     <button id="btnOptions">options</button>

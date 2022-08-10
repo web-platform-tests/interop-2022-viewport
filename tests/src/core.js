@@ -2,11 +2,17 @@
 const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 export { clamp };
 
-const write = (vals, $el) => {
+const write = (vals, $el, prefix = '') => {
     if (!$el) return;
-    $el.innerText = JSON.stringify(vals, null, 4);
+    $el.innerText = `${prefix} ${vals ? JSON.stringify(vals, null, 4) : 'N/A'}`.trim();
 }
 export { write };
+
+const browserUpdatesScrollPositionsOnOverscroll = () => {
+    // WebKit based browsers do this.
+    // @TODO: Move away from UA Sniffing
+    return CSS.supports("-webkit-overflow-scrolling: touch");
+}
 
 const getVisualViewPortValues = ({ clampOffsets = false, resizeDimensions = false }) => {
     let {
@@ -150,11 +156,13 @@ const syncVisualViewportValuesToCustomProperties = (vvv, $el = document.document
 export { syncVisualViewportValuesToCustomProperties };
 
 const getScrollValues = () => {
+    // @note: document.documentElement.scrollTop/Left = window.scrollY/scrollX = window.pageYOffset/pageXOffset
     let {
         scrollX,
         scrollY,
     } = window;
 
+    // Calc overscroll
     const overScrollX = scrollX < 0 ? scrollX : Math.max(0, scrollX + window.innerWidth - document.body.offsetWidth);
     const overScrollY = scrollY < 0 ? scrollY : Math.max(0, scrollY + window.innerHeight - document.body.offsetHeight);
 
@@ -185,10 +193,44 @@ const getLayoutViewportValues = () => {
     // but this is not true: when overscrolling Safari into a pull-to-refresh,
     // the window.innerHeight shrinks, but the layout viewport remains the same.
     const layoutViewport = document.querySelector("#layoutviewport");
-    return layoutViewport.getBoundingClientRect();
+
+    if (!layoutViewport) return;
+
+    const {
+        width,
+        height,
+    } = layoutViewport.getBoundingClientRect();
+
+    return {
+        width,
+        height,
+    };
 };
 export { getLayoutViewportValues };
 
+const getICBValues = () => {
+    // @NOTE: Instead of getting the values through by measuring the root element
+    // (i.e `document.documentElement,getBoundingClientRect()`), we can use
+    // `documentElement.clientHeight/clientWidth` which yield the same values
+    return {
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight,
+    };
+};
+export { getICBValues };
+
+const getWindowValues = () => {
+    let {
+        innerWidth,
+        innerHeight,
+    } = window;
+
+    return {
+        innerWidth,
+        innerHeight,
+    };
+}
+export { getWindowValues };
 
 const initOptionsModal = (update) => {
     if (!document.querySelector('#btnOptions')) return;
@@ -215,12 +257,11 @@ const initVirtualKeyboardIntegration = () => {
         
         navigator.virtualKeyboard.addEventListener('geometrychange', () => {
             // Values a reported by Virtual Keyboard API
-            document.querySelector('#vk-values').innerText = 
-                JSON.stringify(navigator.virtualKeyboard.boundingRect, null, 4);
+            write(navigator.virtualKeyboard.boundingRect, document.querySelector("#vk-values"), 'Virtual Keyboard');
             
-            // Values as set on FakeVK Element
-            const rect = document.querySelector('#fakevk').getBoundingClientRect();		
-            write(rect, document.querySelector('#fakevk-values'));
+            // Read values from the #vkdebugger
+            const rect = document.querySelector('#vkdebugger').getBoundingClientRect();		
+            write({ width: rect.width, height: rect.height }, document.querySelector('#vkdebugger-values'), 'Virtual Keyboard Spacetaker');
         });
 
         // Hook up toggle
@@ -228,16 +269,28 @@ const initVirtualKeyboardIntegration = () => {
             navigator.virtualKeyboard.overlaysContent = e.target.checked;
         });
 
+        // Values on load
+        const vkRect = navigator.virtualKeyboard.boundingRect;
+        write({ width: vkRect.width, height: vkRect.height }, document.querySelector("#vk-values"), 'Virtual Keyboard');
+
+        if (document.querySelector('#vkdebugger')) {
+            const rect = document.querySelector('#vkdebugger').getBoundingClientRect();
+            write({ width: rect.width, height: rect.height }, document.querySelector('#vkdebugger-values'), 'Virtual Keyboard Spacetaker');
+        }
+
     } else {
         document.querySelector('#optVirtualKeyboardOverlaysContent').disabled = "disabled";
+
+        if (document.querySelector("#vk-values")) {
+            write(null, document.querySelector("#vk-values"), 'Virtual Keyboard');
+        }
+
+        if (document.querySelector('#vkdebugger')) {
+            const rect = document.querySelector('#vkdebugger').getBoundingClientRect();		
+            write({ width: rect.width, height: rect.height }, document.querySelector('#vkdebugger-values'), 'Virtual Keyboard Spacetaker');
+        }
     }
 }
-const browserUpdatesScrollPositionsOnOverscroll = () => {
-    // WebKit based browsers do this.
-    // @TODO: Move away from UA Sniffing
-    return CSS.supports("-webkit-overflow-scrolling: touch");
-}
-
 const initVisualViewportIntegration = () => {
     // Browsers that do no update scroll position on overscroll do not need this
     if (browserUpdatesScrollPositionsOnOverscroll()) return;
@@ -249,6 +302,7 @@ const initVisualViewportIntegration = () => {
         checkbox.disabled = "disabled";
     });
 }
+
 const init = (update) => {
     initOptionsModal(update);
     initVirtualKeyboardIntegration();

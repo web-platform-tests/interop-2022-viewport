@@ -17,10 +17,10 @@
                 resizeDimensions: document.querySelectorAll('#vvAdjustValuesByResizing:checked').length > 0,
             });
             core.syncVisualViewportValuesToCustomProperties(vvv);
-            core.write(vvv, document.querySelector("#vv-values"));
+            core.write(vvv, document.querySelector("#vv-values"), 'Visual Viewport');
 
             const sv = core.getScrollValues();
-            core.write(sv, document.querySelector("#s-values"));
+            core.write(sv, document.querySelector("#s-values"), 'Scroll');
         };
 
         core.init(update);

@@ -17,8 +17,14 @@
             });
             core.syncVisualViewportValuesToCustomProperties(vvv);
 
+            const icbv = core.getICBValues();
+            core.write(icbv, document.querySelector("#icb-values"), 'icb');
+
+            const wv = core.getWindowValues();
+            core.write(wv, document.querySelector("#window-values"), 'window');
+
             const lv = core.getLayoutViewportValues();
-            core.write(lv, document.querySelector("#lv-values"));
+            core.write(lv, document.querySelector("#lv-values"), 'layout viewport');
         };
 
         core.init(update);
@@ -31,6 +37,8 @@
     <div id="debug">
         <h1>Layout Viewport Debugger</h1>
         <div id="lv-values"></div>
+        <div id="icb-values"></div>
+        <div id="window-values"></div>
     </div>
 
     <div id="layoutviewport"></div>

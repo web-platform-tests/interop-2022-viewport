@@ -16,6 +16,12 @@
                 clampOffsets: true,
             });
             core.syncVisualViewportValuesToCustomProperties(vvv);
+
+            const icbv = core.getICBValues();
+            core.write(icbv, document.querySelector("#icb-values"), 'icb');
+
+            const wv = core.getWindowValues();
+            core.write(wv, document.querySelector("#window-values"), 'window');
         };
 
         core.init(update);
@@ -26,6 +32,8 @@
     <div id="inputwrapper"><input type="text" /></div>
     <div id="debug">
         <h1>ICB Debugger</h1>
+        <div id="icb-values"></div>
+        <div id="window-values"></div>
     </div>
 
     <div class="heightdebugger"></div>

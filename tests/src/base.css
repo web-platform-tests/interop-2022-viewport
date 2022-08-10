@@ -59,6 +59,10 @@ input {
 	pointer-events: none;
 }
 
+[id$="-values"] {
+	margin-bottom: 1em;
+}
+
 #layoutviewport {
 	position: fixed;
 	inset: 0;
@@ -108,6 +112,7 @@ input {
 	right: 10vw;
 	top: 20vh;
 	z-index: 999;
+	opacity: 0.5;
 }
 
 /* Tweak Lists */
