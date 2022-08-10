@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Visual Viewport Debugger</title>
+    <title>Viewport Units Debugger – Interop 2022 Viewport Investigation Effort Test Pages</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../../base.css" />
     <style>
@@ -200,9 +200,6 @@
 
       const spinner = ["/", "-", "\\", "|"];
       let spinnerIx = 0;
-      function $(name) {
-        return document.querySelector(name);
-      }
 
       let bars = [];
 
@@ -238,13 +235,13 @@
             newBar.classList.remove("template");
             newBar.style.right = `${right}px`;
             newBar.style.position = position;
-            newBar.style.height = `99${unit}`;
-            newBar.style.borderBottom = `1${unit} solid hotpink`;
+            newBar.style.height = `100${unit}`;
+            // newBar.style.borderBottom = `1${unit} solid hotpink`;
             newBar.style.backgroundColor = `hsl(${h}, ${s}%, ${l}%)`;
 
             newBar.querySelector(
               ".text"
-            ).innerHTML = `99${unit} position:${position} <span class="height"></span>`;
+            ).innerHTML = `100${unit} position:${position} <span class="height"></span>`;
             bars.push(newBar);
 
             elem("barContainer").appendChild(newBar);
@@ -257,14 +254,9 @@
 
       function updateText() {
         for (let e of bars) {
-          e.querySelector(".text .height").innerText = `(${Math.round(e.clientHeight * 1.01)}px)`;
+          e.querySelector(".text .height").innerText = `(${Math.round(e.clientHeight)}px)`;
         }
-        //$('.fixedpercent .textfixed').innerText = 'percentage-based position:fixed (' + $('.bar.fixedpercent').clientHeight + 'px)';
-        //$('.fixedvh .textfixed').innerText = 'viewport-unit position:fixed (' + $('.bar.fixedvh').clientHeight + 'px)';
-        //$('.abspercent .textabs').innerText = 'percentage-based position:absolute (' + $('.bar.abspercent').clientHeight + 'px)';
-        //$('.absvh .textabs').innerText = 'viewport-unit position:absolute (' + $('.bar.absvh').clientHeight + 'px)';
-        $(".innerHeightLog").innerText =
-          "innerHeight: " + window.innerHeight + "px " + spinner[spinnerIx];
+        document.querySelector(".innerHeightLog").innerText = "innerHeight: " + window.innerHeight + "px " + spinner[spinnerIx];
         spinnerIx = (spinnerIx + 1) % spinner.length;
       }
       function resized() {
@@ -346,12 +338,13 @@
         btnClose.addEventListener("click", closeOptions);
         btnOptions.addEventListener("click", openOptions);
 
-        consoleContainer.addEventListener("click", function () {
-          if (fullscreen) document.webkitExitFullscreen();
-          else document.documentElement.webkitRequestFullscreen();
+        // @TODO: Restore Fullscreen?
+        // consoleContainer.addEventListener("click", function () {
+        //   if (fullscreen) document.webkitExitFullscreen();
+        //   else document.documentElement.webkitRequestFullscreen();
 
-          fullscreen = !fullscreen;
-        });
+        //   fullscreen = !fullscreen;
+        // });
 
         visualViewport.addEventListener("resize", () => {
           if (options.enableLog) {
@@ -386,12 +379,6 @@
       <div class="text">unit-text position:</div>
     </div>
     <div id="barContainer"></div>
-    <!--
-<div style="right: 0px" class="bar fixedpercent"><div class="textfixed">percentage-based position:fixed</div></div>
-<div style="right: 25px" class="bar fixedvh"><div class="textfixed">viewport-unit position:fixed</div></div>
-<div style="right: 50px" class="bar abspercent"><div class="textabs">percentage-based position:absolute</div></div>
-<div style="right: 75px" class="bar absvh"><div class="textabs">viewport-unit position:absolute</div></div>
--->
     <div class="innerHeightLog"></div>
     <div id="optionsbox" class="hidden">
       <div class="optionsheader">

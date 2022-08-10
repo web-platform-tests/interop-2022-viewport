@@ -51,16 +51,13 @@ input {
 #layoutviewport {    
 	padding: 1em;
 	overflow-y: hidden;
-}
-
-[id$="-values"],
-#visualviewport,
-#layoutviewport {
 	pointer-events: none;
 }
 
 [id$="-values"] {
 	margin-bottom: 1em;
+	white-space: pre-wrap;
+	font-family: monospace;
 }
 
 #layoutviewport {
@@ -100,11 +97,6 @@ input {
 		transparent 20px
 		)
 		10;
-}
-
-#debug div {
-	white-space: pre-wrap;
-	font-family: monospace;
 }
 
 #inputwrapper {

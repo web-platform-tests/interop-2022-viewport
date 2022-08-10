@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Visual Viewport Debugger</title>
+    <title>Visual Viewport Debugger – Interop 2022 Viewport Investigation Effort Test Pages</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../../base.css" />
 
@@ -21,6 +21,9 @@
 
             const sv = core.getScrollValues();
             core.write(sv, document.querySelector("#s-values"), 'Scroll');
+
+            const wv = core.getWindowValues();
+            core.write(wv, document.querySelector("#window-values"), 'window');
         };
 
         core.init(update);
@@ -36,6 +39,7 @@
         <div id="vv-values"></div>
         <div id="s-values"></div>
         <div id="b-values"></div>
+        <div id="window-values"></div>
         <div id="eventlog"></div>
     </div>
 

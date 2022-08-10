@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Visual Keyboard Debugger</title>
+    <title>Virtual Keyboard Debugger – Interop 2022 Viewport Investigation Effort Test Pages</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../../base.css" />
 
@@ -16,6 +16,7 @@
             right: 0;
             height: env(keyboard-inset-height, 0px);
             background: grey;
+            opacity: 0.8;
         }
 
         #vkdebugger::before {
@@ -45,11 +46,9 @@
 </head>
 <body translate="no">
     <div id="inputwrapper"><input type="text" /></div>
-
+    
     <div id="debug">
         <h1>Virtual Keyboard API Debugger</h1>
-        <p>To see how the Visual Viewport is affected, please refer to the <a href="../visual-viewport/">Visual Viewport Test Page</a></p>
-
         <div id="vk-values"></div>
         <div id="vkdebugger-values"></div>
         <div id="lv-values"></div>
@@ -58,8 +57,9 @@
         <div id="window-values"></div>
     </div>
 
-    <div id="vkdebugger"></div>
+    <div id="vkdebugger"><!-- This element is sized wrt to the keyboard-inset-height. Its dimensions are measured and output as the “Spacetaker” values --></div>
     <div class="heightdebugger"></div>
+    <div id="visualviewport"></div>
 
     <button id="btnOptions">options</button>
     <dialog id="options">
@@ -67,6 +67,16 @@
             <button id="btnOptionsClose">close</button>
             <h1>Options</h1>
         </header>
+        <section>
+            <h3>Visual Viewport</h3>
+            <p>Some browsers allow negative <code>scrollX</code>/<code>scrollY</code>, and allow the same for the Visual Viewport’s <code>pageTop</code>/<code>pageLeft</code>. This may conflict with positioning the Visual Viewport box, so there’s a few fixes one can apply</p>
+            <div class="option"><input type="radio" id="vvAdjustValuesNo" name="vvAdjustValues" /><label for="vvAdjustValuesNo">Do not adjust values when overscrolling</label></div>
+            <div class="option"><input type="radio" id="vvAdjustValuesByClamping" name="vvAdjustValues" checked /><label for="vvAdjustValuesByClamping">Clamp values between 0 and max scroll when overscrolling</label></div>
+            <div class="option"><input type="radio" id="vvAdjustValuesByResizing" name="vvAdjustValues" /><label for="vvAdjustValuesByResizing">Shrink height/width when overscrolling</label></div>
+            <p>Positioning method to use</p>
+            <div class="option"><input type="radio" id="vvPositionAbsolute" name="vvPosition" value="absolute" checked /><label for="vvPositionAbsolute"><code>position: absolute;</code></label></div>
+            <div class="option"><input type="radio" id="vvPositionFixed" name="vvPosition" value="fixed" /><label for="vvPositionFixed"><code>position: fixed;</code></label></div>
+        </section>
         <section>
             <h3>Virtual Keyboard</h3>
             <div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
