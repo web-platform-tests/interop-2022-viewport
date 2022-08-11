@@ -3,7 +3,7 @@
 A collection of pages with tests for the Interop 2022 Viewport Investigation Effort
 
 - View online: https://interop-2022-viewport.netlify.app/
-- Tested Scenarios + Results: https://docs.google.com/spreadsheets/d/14cxGQ56AHz8LjSCVmPlDXKKuROqDuhD8j0F9RoJileI/edit#gid=0
+- Tested Scenarios + Results: https://goo.gle/interop-2022-viewport-testresults
 
 ## Installation
 
