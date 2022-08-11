@@ -1,6 +1,6 @@
-# Interop 2022: Viewport: Tests
+# Interop 2022: Viewport: Demos
 
-A collection of pages with tests for the Interop 2022 Viewport Investigation Effort
+A collection of demos that allow you to debug and test the behavior of certain viewport and viewport-related aspects, part of the Interop 2022 Viewport Investigation Effort
 
 - View online: https://interop-2022-viewport.netlify.app/
 - Tested Scenarios + Results: https://goo.gle/interop-2022-viewport-testresults

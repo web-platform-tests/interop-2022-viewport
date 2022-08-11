@@ -2,15 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Visual Viewport Debugger – Interop 2022 Viewport Investigation Effort Test Pages</title>
+    <title>Virtual Keyboard Debugger – Interop 2022 Viewport Investigation Effort Demo Pages</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../../base.css" />
+
+    <style>
+        #vkdebugger,
+        #vkdebugger::before {
+            box-sizing: content-box;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: env(keyboard-inset-height, 0px);
+            background: grey;
+            opacity: 0.8;
+        }
+
+        #vkdebugger::before {
+            content: '';
+            border-top: 1em dotted #666;
+        }
+    </style>
 
     <script type="module">
         import * as core from '../../core.js';
 
         const update = () => {
-            document.body.setAttribute('data-vv-positioning', document.querySelector('[name="vvPosition"]:checked').value);
+            document.body.setAttribute('data-vv-positioning', document.querySelector('[name="vvPosition"]:checked')?.value ?? 'absolute');
 
             const vvv = core.getVisualViewPortValues({
                 clampOffsets: document.querySelectorAll('#vvAdjustValuesByClamping:checked').length > 0,
@@ -19,32 +38,28 @@
             core.syncVisualViewportValuesToCustomProperties(vvv);
             core.write(vvv, document.querySelector("#vv-values"), 'Visual Viewport');
 
-            const sv = core.getScrollValues();
-            core.write(sv, document.querySelector("#s-values"), 'Scroll');
-
-            const wv = core.getWindowValues();
-            core.write(wv, document.querySelector("#window-values"), 'window');
+            // @note Virtual Keyboard Code Hooks and Values via core.init
         };
 
         core.init(update);
     </script>
 </head>
-
-<body translate="no" data-vv-positioning="absolute">
+<body translate="no">
     <div id="inputwrapper"><input type="text" /></div>
-
+    
     <div id="debug">
-        <h1>Visual Viewport Debugger</h1>
+        <h1>Virtual Keyboard API Debugger</h1>
+        <div id="vk-values"></div>
+        <div id="vkdebugger-values"></div>
         <div id="lv-values"></div>
+        <div id="icb-values"></div>
         <div id="vv-values"></div>
-        <div id="s-values"></div>
-        <div id="b-values"></div>
         <div id="window-values"></div>
-        <div id="eventlog"></div>
     </div>
 
-    <div id="visualviewport"></div>
+    <div id="vkdebugger"><!-- This element is sized wrt to the keyboard-inset-height. Its dimensions are measured and output as the “Spacetaker” values --></div>
     <div class="heightdebugger"></div>
+    <div id="visualviewport"></div>
 
     <button id="btnOptions">options</button>
     <dialog id="options">
@@ -55,8 +70,8 @@
         <section>
             <h3>Visual Viewport</h3>
             <p>Some browsers allow negative <code>scrollX</code>/<code>scrollY</code>, and allow the same for the Visual Viewport’s <code>pageTop</code>/<code>pageLeft</code>. This may conflict with positioning the Visual Viewport box, so there’s a few fixes one can apply</p>
-            <div class="option"><input type="radio" id="vvAdjustValuesNo" name="vvAdjustValues" checked /><label for="vvAdjustValuesNo">Do not adjust values when overscrolling</label></div>
-            <div class="option"><input type="radio" id="vvAdjustValuesByClamping" name="vvAdjustValues" /><label for="vvAdjustValuesByClamping">Clamp values between 0 and max scroll when overscrolling</label></div>
+            <div class="option"><input type="radio" id="vvAdjustValuesNo" name="vvAdjustValues" /><label for="vvAdjustValuesNo">Do not adjust values when overscrolling</label></div>
+            <div class="option"><input type="radio" id="vvAdjustValuesByClamping" name="vvAdjustValues" checked /><label for="vvAdjustValuesByClamping">Clamp values between 0 and max scroll when overscrolling</label></div>
             <div class="option"><input type="radio" id="vvAdjustValuesByResizing" name="vvAdjustValues" /><label for="vvAdjustValuesByResizing">Shrink height/width when overscrolling</label></div>
             <p>Positioning method to use</p>
             <div class="option"><input type="radio" id="vvPositionAbsolute" name="vvPosition" value="absolute" checked /><label for="vvPositionAbsolute"><code>position: absolute;</code></label></div>

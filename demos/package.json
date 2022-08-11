@@ -1,7 +1,7 @@
 {
-  "name": "interop-2022-viewport-tests",
+  "name": "interop-2022-viewport-demos",
   "version": "1.0.0",
-  "description": "A collection of pages with tests for the Interop 2022 Viewport Investigation Effort",
+  "description": "A collection of demos that allow you to debug and test the behavior of certain viewport and viewport-related aspects",
   "scripts": {
     "start": "serve src",
 	"deploy": "netlify deploy --prod",
