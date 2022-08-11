@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Viewport Units Debugger – Interop 2022 Viewport Investigation Effort Test Pages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../base.css" />
+    <style>
+      body {
+        height: 2000px;
+      }
+
+      .template {
+        display: none;
+      }
+
+      div.bar {
+        width: 20px;
+        top: 0px;
+        white-space: nowrap;
+      }
+
+      .bar > .text {
+        box-sizing: border-box;
+        width: 65vh;
+        background-color: white;
+        opacity: 0.7;
+        height: 20px;
+        padding: 0px 80px;
+        transform: rotate(90deg);
+        transform-origin: left bottom 0;
+      }
+
+      .fixedpercent {
+        position: fixed;
+        height: 99%;
+        border-bottom: 1% solid hotpink;
+        background-color: lightsteelblue;
+      }
+
+      .fixedvh {
+        position: fixed;
+        height: 99vh;
+        border-bottom: 1vh solid hotpink;
+        background-color: lightskyblue;
+      }
+
+      .abspercent {
+        position: absolute;
+        height: 99%;
+        border-bottom: 1% solid hotpink;
+        background-color: darksalmon;
+      }
+
+      .absvh {
+        position: absolute;
+        height: 99vh;
+        border-bottom: 1vh solid hotpink;
+        background-color: coral;
+      }
+
+      .textfixed {
+        box-sizing: border-box;
+        width: 65vh;
+        background-color: white;
+        opacity: 0.7;
+        height: 20px;
+        padding: 0px 80px;
+        transform: rotate(90deg);
+        transform-origin: left bottom 0;
+      }
+
+      .textabs {
+        box-sizing: border-box;
+        width: 65vh;
+        background-color: white;
+        opacity: 0.7;
+        height: 20px;
+        padding: 0px 80px;
+        transform: rotate(90deg);
+        transform-origin: left bottom 0;
+      }
+
+      #consoleContainer {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        height: 100vh;
+      }
+
+      #console {
+        position: absolute;
+        left: 0px;
+        right: 100px;
+      }
+      .innerHeightLog {
+        position: fixed;
+        top: 0;
+        right: 100px;
+        width: 180px;
+        height: 20px;
+        background-color: chartreuse;
+      }
+
+      #optionsbox {
+        position: fixed;
+        padding: 5px;
+        left: 15px;
+        right: 15px;
+        top: 15px;
+        bottom: 15px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 7px 6px 14px 0px black;
+        z-index: 999;
+      }
+
+      #optionsbox h1 {
+        margin: 0;
+      }
+
+      #optionsbox > .optionsheader {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 10px 0 10px;
+      }
+
+      #optionsbox > .container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      #optionsbox > .container > * {
+        width: 100%;
+        height: 50px;
+      }
+
+      .option {
+        display: flex;
+        align-items: center;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .option input[type="checkbox"] {
+        width: 2em;
+        height: 2em;
+      }
+
+      :disabled + label {
+        text-decoration: line-through;
+      }
+
+      #btnClose:after {
+        width: 37px;
+        text-align: center;
+        font-size: xx-large;
+        font-weight: 300;
+        display: inline-block;
+        content: "\00d7"; /* This will render the 'X' */
+      }
+
+      #the-input {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0);
+        z-index: 998;
+        font-size: 16px;
+      }
+
+      #fixedviewport {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        border: 5px dotted blue;
+        pointer-events: none;
+      }
+    </style>
+
+    <script type="module">
+ let options = {
+        enableLog: true,
+        posFixed: true,
+        posAbsolute: true,
+        percentEnable: true,
+        vhEnable: true,
+        lvhEnable: true,
+        svhEnable: true,
+        dvhEnable: true,
+        virtualKeyboardOverlaysContent: false,
+      };
+
+      const spinner = ["/", "-", "\\", "|"];
+      let spinnerIx = 0;
+
+      let bars = [];
+
+      function regenerateBars() {
+        let template = elem("templateBar");
+        for (let bar of bars) {
+          bar.remove();
+        }
+
+        bars = [];
+
+        let units = [];
+        if (options.vhEnable) units.push("vh");
+        if (options.lvhEnable) units.push("lvh");
+        if (options.svhEnable) units.push("svh");
+        if (options.dvhEnable) units.push("dvh");
+        if (options.percentEnable) units.push("%");
+
+        let positions = [];
+        if (options.posFixed) positions.push("fixed");
+        if (options.posAbsolute) positions.push("absolute");
+
+        let h = 28;
+        let right = 5;
+        for (let position of positions) {
+          let s = 100;
+          let l = 80;
+
+          for (let unit of units) {
+            s -= 15;
+            l -= 8;
+            let newBar = template.cloneNode(true);
+            newBar.classList.remove("template");
+            newBar.style.right = `${right}px`;
+            newBar.style.position = position;
+            newBar.style.height = `100${unit}`;
+            // newBar.style.borderBottom = `1${unit} solid hotpink`;
+            newBar.style.backgroundColor = `hsl(${h}, ${s}%, ${l}%)`;
+
+            newBar.querySelector(
+              ".text"
+            ).innerHTML = `100${unit} position:${position} <span class="height"></span>`;
+            bars.push(newBar);
+
+            elem("barContainer").appendChild(newBar);
+
+            right += 25;
+          }
+          h = 205;
+        }
+      }
+
+      function updateText() {
+        for (let e of bars) {
+          e.querySelector(".text .height").innerText = `(${Math.round(e.clientHeight)}px)`;
+        }
+        document.querySelector(".innerHeightLog").innerText = "innerHeight: " + window.innerHeight + "px " + spinner[spinnerIx];
+        spinnerIx = (spinnerIx + 1) % spinner.length;
+      }
+      function resized() {
+        if (options.enableLog) {
+          var console = document.getElementById("console");
+          console.innerHTML +=
+            "*Resize! window.innerHeight: " +
+            window.innerHeight +
+            ",  documentElement.clientHeight: " +
+            document.documentElement.clientHeight +
+            "<br>";
+        }
+        updateText();
+      }
+
+      function elem(id) {
+        return document.getElementById(id);
+      }
+
+      function syncVirtualKeyboardSetting() {
+        if ("virtualKeyboard" in navigator) {
+          navigator.virtualKeyboard.overlaysContent = options.virtualKeyboardOverlaysContent;
+        } else {
+          elem("optVirtualKeyboardOverlaysContent").disabled = true;
+        }
+      }
+
+      function openOptions() {
+        elem("optPosAbs").checked = options.posAbsolute;
+        elem("optPosFixed").checked = options.posFixed;
+        elem("optPercent").checked = options.percentEnable;
+        elem("optVh").checked = options.vhEnable;
+        elem("optLvh").checked = options.lvhEnable;
+        elem("optSvh").checked = options.svhEnable;
+        elem("optDvh").checked = options.dvhEnable;
+        elem("optLogging").checked = options.enableLog;
+        elem("optVirtualKeyboardOverlaysContent").checked = options.virtualKeyboardOverlaysContent;
+
+        const elemOptions = document.getElementById("optionsbox");
+        elemOptions.classList.remove("hidden");
+      }
+
+      function readOptions() {
+        options.posAbsolute = elem("optPosAbs").checked;
+        options.posFixed = elem("optPosFixed").checked;
+        options.percentEnable = elem("optPercent").checked;
+        options.vhEnable = elem("optVh").checked;
+        options.lvhEnable = elem("optLvh").checked;
+        options.svhEnable = elem("optSvh").checked;
+        options.dvhEnable = elem("optDvh").checked;
+        options.enableLog = elem("optLogging").checked;
+        options.virtualKeyboardOverlaysContent =  elem("optVirtualKeyboardOverlaysContent").checked;
+
+        window.localStorage.setItem(
+          "urlbarsize_options",
+          JSON.stringify(options)
+        );
+      }
+
+      function closeOptions() {
+        const elemOptions = document.getElementById("optionsbox");
+        elemOptions.classList.add("hidden");
+
+        readOptions();
+        regenerateBars();
+        syncVirtualKeyboardSetting();
+      }
+
+      var fullscreen = false;
+      addEventListener("load", function () {
+        const stored_options_str =
+          window.localStorage.getItem("urlbarsize_options");
+        if (stored_options_str) {
+          options = JSON.parse(stored_options_str);
+        }
+        let consoleContainer = document.getElementById("consoleContainer");
+        let btnClose = document.getElementById("btnClose");
+
+        btnClose.addEventListener("click", closeOptions);
+        btnOptions.addEventListener("click", openOptions);
+
+        // @TODO: Restore Fullscreen?
+        // consoleContainer.addEventListener("click", function () {
+        //   if (fullscreen) document.webkitExitFullscreen();
+        //   else document.documentElement.webkitRequestFullscreen();
+
+        //   fullscreen = !fullscreen;
+        // });
+
+        visualViewport.addEventListener("resize", () => {
+          if (options.enableLog) {
+            var console = document.getElementById("console");
+            console.innerHTML +=
+              "*VV Resize: " + visualViewport.height + " <br>";
+          }
+          updateText();
+        });
+
+        regenerateBars();
+        syncVirtualKeyboardSetting();
+
+        updateText();
+        setInterval(updateText, 500);
+      });
+    </script>
+</head>
+
+<body translate="no" onresize="resized()">
+    <div id="fixedviewport"></div>
+    <button id="btnOptions">Options</button>
+    <input type="text" id="the-input" />
+    <div id="consoleContainer">
+      <div id="console">
+        <br />
+        OnResize handler calls will be displayed below with window.innerWidth
+        and documentElement.clientHeight<br /><br />
+      </div>
+    </div>
+    <div id="templateBar" class="template bar">
+      <div class="text">unit-text position:</div>
+    </div>
+    <div id="barContainer"></div>
+    <div class="innerHeightLog"></div>
+    <div id="optionsbox" class="hidden">
+      <div class="optionsheader">
+        <h1>Options</h1>
+        <button style="background-color: transparent; border: none">
+          <div id="btnClose"></div>
+        </button>
+      </div>
+      <div class="container">
+        <div>
+          <h3>Position:</h3>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="optPosAbs" name="optPosAbs" checked />
+          <label for="optPosAbs">position: absolute</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="optPosFixed" name="optPosFixed" checked />
+          <label for="optPosFixed">position: fixed</label>
+        </div>
+        <div>
+          <h3>Units:</h3>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="optPercent" name="optPercent" checked />
+          <label for="optPercent">precentage-based</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="optVh" name="optVh" checked />
+          <label for="optVh">vh</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="optLvh" name="optLvh" checked />
+          <label for="optLvh">lvh</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="optSvh" name="optSvh" checked />
+          <label for="optSvh">svh</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="optDvh" name="optSvh" checked />
+          <label for="optDvh">dvh</label>
+        </div>
+        <div>
+          <h3>Misc:</h3>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="optLogging" name="optLogging" checked />
+          <label for="optLogging">Enable Resize Event Logging</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" />
+          <label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

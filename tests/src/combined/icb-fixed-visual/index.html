@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Visual Viewport Debugger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../base.css" />
+    <style>
+        html {
+            border: 10px dashed red;
+        }
+
+        body {
+            height: 300%;
+        }
+
+        input[type="text"] {
+            font-size: 16px;
+            border: 2px solid grey;
+            margin-bottom: 0.5em;
+            width: 10em;
+        }
+
+        main {
+            position: fixed;
+            right: 3em;
+            top: 25%;
+            transform: translate3d(0, -100%, 0);
+
+            display: flex;
+            flex-direction: column;
+            z-index: 9999999;
+        }
+
+        .fixed {
+            position: fixed;
+            min-height: 2em;
+            background: lime;
+
+            line-height: 2em;
+            text-align: center;
+        }
+
+        .fixed--top, .fixed--bottom {
+            left: 25vw;
+            width: 50vw;
+        }
+
+        .fixed--top {
+            top: 0;
+        }
+
+        .fixed--bottom {
+            bottom: calc(env(keyboard-inset-height, 0px) / 2);
+        }
+        /*
+        .has-virtual-keyboard .fixed--bottom {
+            bottom: calc(env(keyboard-inset-height, 0px) / 2);
+        }
+
+        .no-virtual-keyboard .fixed--bottom {
+            bottom: var(--keyboard-inset-height, 0);
+        }
+        */
+
+        .breaker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 5px dashed gray;
+        }
+
+        .breaker--horizontal {
+            width: 100vw;
+            height: 0;
+        }
+
+        .breaker--vertical {
+            height: 100vh;
+            width: 0;
+        }
+
+        #fixedviewport {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            border: 5px dotted blue;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /*
+        .unzoomed {
+            transform: scale(calc(1 / var(--vvz, 1)));
+        }
+        */
+
+        #visualviewport {
+            /*
+            position: absolute;
+            top: var(--vvtabs, 0px);
+            left: var(--vvlabs, 0px);
+            height: var(--vvhabs, 100vh);
+            width: var(--vvwsabs, 100vw);
+            */
+            
+            position: fixed;
+            top: var(--vvt, 0px);
+            left: var(--vvl, 0px);
+            height: var(--vvh, 100%);
+            width: var(--vvw, 100%);
+            
+            border: 8px solid;
+            border-image: repeating-linear-gradient(
+                45deg,
+                orange,
+                orange 10px,
+                transparent 10px,
+                transparent 20px
+            ) 10;
+            pointer-events: none;
+        }
+
+        .fixed--vvtop, .fixed--vvbottom {
+            background: orange;
+            min-width: 10em;
+            padding: 0 0.5em;
+            white-space: nowrap;
+            max-width: var(--vvw, 0px);
+            overflow-x: auto;
+
+            z-index: 999998;
+            outline: 1px solid aliceblue;
+
+            --unzoomed-em: calc(1rem / var(--vvz, 1));
+        }
+
+        .fixed--vvtop {
+            top: calc(var(--vvt, 0px));
+            left: calc(var(--vvl, 0px));
+        }
+
+        .fixed--vvbottom {
+            bottom: calc(var(--lvph, 0px) - var(--vvb, 0px));
+            right: calc(var(--lvpw, 0px) - var(--vvr, 0px));
+        }
+
+        .unzoomed {
+            font-size: calc(1em / var(--vvz, 1));
+        }
+
+        #debug {
+            position: fixed;
+            top: calc(3em + var(--vvt, 0px));
+            left: calc(3em + var(--vvl, 0px));
+            bottom: calc(3em + var(--lvph, 0px) - var(--vvb, 0px));
+            right: calc(3em + var(--lvpw, 0px) - var(--vvr, 0px));
+            
+            text-shadow: 0 0 1px aliceblue;
+            z-index: 999999;
+            pointer-events: none;
+        }
+
+        #debug ul {
+            list-style: none;
+        }
+
+        [data-ref]::before {
+            content: attr(data-ref) " = ";
+        }
+
+        .cols {
+            display: flex;
+            flex-direction: row;
+            gap: 1em;
+        }
+
+        li {
+            white-space: nowrap;
+        }
+
+        #eventlogger {
+            max-height: calc(var(--vvh, 100vh) * 0.9);
+            display: flex;
+            flex-direction: column-reverse;
+        }
+    </style>
+
+    <script type="module">
+        // This code requires the Visual Viewport API
+        if (!window.visualViewport) {
+            throw "Visual Viewport not supported";
+        }
+
+        const INCLUDE_FIXES = false; // Whether to include extra offset or event fixes
+        const AUTO_UPDATE = true; // Whether to constantly update the values
+
+        const LOG_W_RESIZE = true;
+        const LOG_W_SCROLL = true;
+        const LOG_VV_RESIZE = true;
+        const LOG_VV_SCROLL = true;
+
+        // Flushes the gathered values into the DOM
+        function assignValues(values) {
+            for (const [key, value] of Object.entries(values)) {
+                document.documentElement.style.setProperty(key, value);
+                if (document.querySelector(`[data-ref="${key}"] output`)) {
+                    document.querySelector(`[data-ref="${key}"] output`).innerText = value;
+                }
+            }
+        }
+
+        // Visual Viewport
+        function getVisualViewport() {
+            
+            // @NOTE: Limiting offsetX to 0 here, as some browsers go negative
+            // when overscrolling, even though the
+            let offsetTop = visualViewport.offsetTop;
+            let offsetLeft = visualViewport.offsetLeft;
+            if (INCLUDE_FIXES) {
+                offsetTop = Math.max(offsetTop, 0);
+                offsetLeft = Math.max(offsetLeft, 0);
+            }
+            
+            return {
+                width: visualViewport.width,
+                height: visualViewport.height,
+                zoom: visualViewport.scale,
+                pageLeft: visualViewport.pageLeft,
+                pageTop: visualViewport.pageTop,
+                offsetLeft: visualViewport.offsetLeft,
+                offsetTop: visualViewport.offsetTop,
+
+                // For when you to use position: absolute on the VV
+                absLeft: visualViewport.pageLeft,
+                absTop: visualViewport.pageTop,
+                absRight: visualViewport.pageLeft + visualViewport.width, // @TODO: Update value right here, instead of adding/subtracting in CSS
+                absBottom: visualViewport.pageTop + visualViewport.height, // @TODO: Update value right here, instead of adding/subtracting in CSS
+
+                // For when you to use position: fixed on the VV
+                top: offsetTop,
+                left: offsetLeft,
+                right: offsetLeft + visualViewport.width, // @TODO: Update value right here, instead of adding/subtracting in CSS
+                bottom: offsetTop + visualViewport.height // @TODO: Update value right here, instead of adding/subtracting in CSS
+            };
+        }
+        const updateVisualViewport = () => {
+            const values = {};
+            const vv = getVisualViewport();
+
+            values["--vvh"] = `${vv.height.toFixed(2)}px`;
+            values["--vvw"] = `${vv.width.toFixed(2)}px`;
+            values["--vvpt"] = `${vv.pageTop.toFixed(2)}px`;
+            values["--vvpl"] = `${vv.pageLeft.toFixed(2)}px`;
+            values["--vvot"] = `${vv.offsetTop.toFixed(2)}px`;
+            values["--vvol"] = `${vv.offsetLeft.toFixed(2)}px`;
+            values["--vvz"] = `${vv.zoom}`;
+
+            values["--vvt"] = `${vv.top.toFixed(2)}px`;
+            values["--vvl"] = `${vv.left.toFixed(2)}px`;
+            values["--vvb"] = `${vv.bottom.toFixed(2)}px`;
+            values["--vvr"] = `${vv.right.toFixed(2)}px`;
+
+            values["--vvtabs"] = `${vv.absTop.toFixed(2)}px`;
+            values["--vvlabs"] = `${vv.absLeft.toFixed(2)}px`;
+            values["--vvbabs"] = `${vv.absBottom.toFixed(2)}px`;
+            values["--vvrabs"] = `${vv.absRight.toFixed(2)}px`;
+
+            assignValues(values);
+        };
+        window.addEventListener("load", updateVisualViewport);
+        window.visualViewport.addEventListener("scroll", updateVisualViewport);
+        window.visualViewport.addEventListener("resize", () => {
+            // @NOTE: Also update window size, as that resizes as well
+            // @TODO: Check if browsers consistently trigger window.resize
+            updateVisualViewport();
+            updateWindowSize();
+            
+            // @NOTE: We trigger an extra updateLayoutViewport because some browers
+            // do not behave correctly (Looking at you, Firefox and Edge on iOS)
+            //
+            // You can test this by:
+            // - Disabling the line below
+            // - Scrolling the page down
+            // - Pinch Zooming
+            // Worth noting:
+            // - The vv-bottom elements will be off-position
+            // - The value for --lvph will be wrong, as it was measured too early
+            if (INCLUDE_FIXES) {
+                setTimeout(updateLayoutViewport, 250);
+                setTimeout(updateWindowSize, 250);
+            }
+        });
+
+        // ICB
+        const getICB = () => {
+            // @NOTE: Instead of measuring the ICB element, we use
+            // documentElement.clientX/clientY which yield the same value
+            
+            // return document.querySelector('html').getBoundingClientRect();
+
+            return {
+                height: document.documentElement.clientHeight,
+                width: document.documentElement.clientWidth
+            };
+        };
+
+        const updateICB = () => {
+            const values = {};
+            const ICB = getICB();
+
+            values["--icbh"] = `${ICB.height}px`;
+            values["--icbw"] = `${ICB.width}px`;
+
+            assignValues(values);
+        };
+        window.addEventListener("load", updateICB);
+        window.addEventListener("resize", updateICB);
+
+        // Scroll Position
+        const getScrollPosition = () => {
+            // document.documentElement.scrollTop/Left (= window.scrollY/scrollX = window.pageXOffset/pageYOffset)
+            
+            // @NOTE: includes hack/workaround where documentElement.scrollTop/scrollLeft don’t get updated properly
+            // in Chrome/Firefox in case one has zoomed in. There, the value remains 0 until you cross the end of the
+            // ICB. On iOS the value updates immediately as you scroll.
+            // @TODO: file bug for the above
+            if (INCLUDE_FIXES) {
+                return {
+                    scrollTop: Math.max(window.scrollY, visualViewport.pageTop),
+                    scrollLeft: Math.max(window.scrollX, visualViewport.pageLeft)
+                };
+            }
+
+            return {
+                scrollTop: window.scrollY,
+                scrollLeft: window.scrollX,
+            }
+        };
+
+        const updateScrollPosition = () => {
+            const values = {};
+            const scrollPos = getScrollPosition();
+
+            values["--d-st"] = `${scrollPos.scrollTop.toFixed(2)}px`;
+            values["--d-sl"] = `${scrollPos.scrollLeft.toFixed(2)}px`;
+
+            assignValues(values);
+        };
+        window.addEventListener("load", updateScrollPosition);
+        window.addEventListener("scroll", updateScrollPosition);
+
+        // WindowSize
+        const getWindowSize = () => {
+            return {
+                innerHeight: window.innerHeight,
+                innerWidth: window.innerWidth,
+            };
+        };
+        const updateWindowSize = () => {
+            const values = {};
+            const windowSize = getWindowSize();
+
+            values["--w-ih"] = `${windowSize.innerHeight}px`;
+            values["--w-iw"] = `${windowSize.innerWidth}px`;
+
+            assignValues(values);
+        };
+        window.addEventListener("load", updateWindowSize);
+        window.addEventListener("resize", updateWindowSize);
+
+        // Layout Viewport
+        const getLayoutViewport = () => {
+            // @NOTE: You might think we could use window.innerHeight/innerWidth for this
+            // but this is not true: when overscrolling Safari into a pull-to-refresh,
+            // the window.innerHeight shrinks, but the layout viewport remains the same.
+            const layoutViewport = document.querySelector("#fixedviewport");
+            return layoutViewport.getBoundingClientRect();
+        };
+
+        const updateLayoutViewport = () => {
+            const values = {};
+            const layoutViewport = getLayoutViewport();
+
+            values["--lvph"] = `${layoutViewport.height.toFixed(2)}px`;
+            values["--lvpw"] = `${layoutViewport.width.toFixed(2)}px`;
+
+            assignValues(values);
+        };
+        window.addEventListener("load", updateLayoutViewport);
+        window.addEventListener("resize", () => {
+            updateWindowSize();
+            
+            // @NOTE: We trigger an extra resize because some browers fire the resize
+            // event too soon when the UA UI gets shown (Looking at you, Firefox 
+            // and Edge on iOS). In those browsers, the event gets fired *WHILE* the
+            // UA UI Elements are still animating, instead of *AFTER* the animation.
+            //
+            // You can test this by:
+            // - Disabling the line below
+            // - Scrolling the page a bit down and back up again
+            // Worth noting:
+            // - The vv-bottom elements will be off-position
+            // - The value for --lvph will be wrong, as it was measured too early
+            if (INCLUDE_FIXES) {
+                setTimeout(updateLayoutViewport, 250);
+            }
+        });
+
+        const updateAll = () => {
+            updateICB();
+            updateWindowSize();
+            updateLayoutViewport();
+            updateScrollPosition();
+            updateVisualViewport();
+        };
+
+        // Update all when input gets focussed, as not all browsers trigger resize events
+        // (Looking at you, Firefox on iOS) + it takes some time before they have transitioned
+        if (INCLUDE_FIXES) {
+            document.querySelector('input[type="text"]').addEventListener('focus', () => {
+                log('input.focus');
+                setTimeout(updateAll, 250);
+                setTimeout(() => {
+                    log(JSON.stringify(getVisualViewport(), null, 4));
+                }, 500);
+            });
+            document.querySelector('input[type="text"]').addEventListener('blur', () => {
+                log('input.blur');
+                setTimeout(updateAll, 250);
+                setTimeout(() => {
+                    updateWindowSize();
+                    log(JSON.stringify(getVisualViewport(), null, 4));
+                }, 500);
+            });
+        }
+
+        // Logggggg
+        const log = (msg) => {
+            const li = document.createElement('li');
+            li.innerText = msg;
+            document.querySelector('#eventlogger').prepend(li);
+        };
+        window.addEventListener('DOMContentLoaded', (e) => log('DOMContentLoaded'));
+        window.addEventListener('load', (e) => log('window.load'));
+        window.addEventListener('resize', (e) => LOG_W_RESIZE && log('window.resize'));
+        window.addEventListener('scroll', (e) => LOG_W_SCROLL && log('window.scroll'));
+        window.visualViewport.addEventListener('resize', (e) => LOG_VV_RESIZE && log('visualViewport.resize'));
+        window.visualViewport.addEventListener('scroll', (e) => LOG_VV_SCROLL && log('visualViewport.scroll'));
+
+        if ("virtualKeyboard" in navigator) {
+            document.getElementById("overlaysContent").addEventListener("change", (e) => {
+                navigator.virtualKeyboard.overlaysContent = e.target.checked;
+            });
+        } else {
+            document.getElementById("overlaysContent").disabled = true;
+        }
+
+        // Constant update
+        if (AUTO_UPDATE) {
+            setInterval(updateAll, 100);
+        }
+    </script>
+</head>
+
+<body translate="no">
+    <main>
+        <input type="text" />
+        <label>
+          <input type="checkbox" id="overlaysContent"> overlaysContent
+        </label>
+    </main>
+    
+    <h1>I am root</h1>
+    
+    <div id="debug" class="unzoomed">
+        <div class="cols">
+            <ul id="units">
+                <li data-ref="--icbh"><output></output></li>
+                <li data-ref="--icbw"><output></output></li>
+    
+                <li data-ref="--w-ih"><output></output></li>
+                <li data-ref="--w-iw"><output></output></li>
+                <li data-ref="--d-st"><output></output></li>
+                <li data-ref="--d-sl"><output></output></li>
+    
+                <li data-ref="--lvph"><output></output></li>
+                <li data-ref="--lvpw"><output></output></li>
+    
+                <li data-ref="--vvh"><output></output></li>
+                <li data-ref="--vvw"><output></output></li>
+                <li data-ref="--vvt"><output></output></li>
+                <li data-ref="--vvl"><output></output></li>
+                <!-- <li data-ref="--vvb"><output></output></li>
+                <li data-ref="--vvr"><output></output></li> -->
+                <li data-ref="--vvpl"><output></output></li>
+                <li data-ref="--vvpt"><output></output></li>
+                <li data-ref="--vvol"><output></output></li>
+                <li data-ref="--vvot"><output></output></li>
+            </ul>
+            <ol id="eventlogger" reversed></ol>
+        </div>
+    </div>
+    
+    <div class="fixed fixed--top">.fixed--top</div>
+    <div class="fixed fixed--bottom">.fixed--bottom</div>
+    
+    <div class="fixed fixed--vvtop">.fixed--vvtop</div>
+    <div class="fixed fixed--vvbottom">.fixed--vvbottom</div>
+    
+    <div class="fixed fixed--vvtop unzoomed">.fixed--vvtop.unzoomed</div>
+    <div class="fixed fixed--vvbottom unzoomed">.fixed--vvbottom.unzoomed</div>
+    
+    <div id="fixedviewport"></div>
+    <div id="visualviewport"></div>
+</body>
+</html>
