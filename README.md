@@ -16,12 +16,12 @@ There are a bunch of demos available to debug and test the behavior of certain v
 - [Viewport Units + -webkit-fill-available](https://devinrousso.com/demo/WebKit/css/viewport-units.html) _(external)_
 - [ICB + Fixed Viewport + Visual Viewport + Event Debugger](https://interop-2022-viewport.netlify.app/combined/icb-fixed-visual/)
 
+The source of the non-external demos is [included in this repository’s `demos` folder](./demos).
 
 ## Findings
 
 - TODO
 
-The source of the non-external demos is [included in this repository’s `demos` folder](./demos).
 ## Recommendations
 
 - TODO
