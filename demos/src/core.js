@@ -11,7 +11,7 @@ export { write };
 const browserUpdatesScrollPositionsOnOverscroll = () => {
     // WebKit based browsers do this.
     // @TODO: Move away from UA Sniffing
-    return CSS.supports("-webkit-overflow-scrolling: touch");
+    return CSS.supports("selector(:nth-child(1 of x))");
 }
 
 const getVisualViewPortValues = ({ clampOffsets = false, resizeDimensions = false }) => {
