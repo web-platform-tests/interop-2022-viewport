@@ -340,17 +340,27 @@
             }
         };
 
-        const updateScrollPosition = () => {
+        const getDocumentClientSize = () => {
+            return {
+                clientWidth: document.documentElement.clientWidth,
+                clientHeight: document.documentElement.clientHeight,
+            }
+        };
+
+        const updateDocumentRelatedValues = () => {
             const values = {};
             const scrollPos = getScrollPosition();
+            const size = getDocumentClientSize();
 
             values["--d-st"] = `${scrollPos.scrollTop.toFixed(2)}px`;
             values["--d-sl"] = `${scrollPos.scrollLeft.toFixed(2)}px`;
+            values["--d-cw"] = `${size.clientWidth}px`;
+            values["--d-ch"] = `${size.clientHeight}px`;
 
             assignValues(values);
         };
-        window.addEventListener("load", updateScrollPosition);
-        window.addEventListener("scroll", updateScrollPosition);
+        window.addEventListener("load", updateDocumentRelatedValues);
+        window.addEventListener("scroll", updateDocumentRelatedValues);
 
         // WindowSize
         const getWindowSize = () => {
@@ -480,6 +490,8 @@
             <ul id="units">
                 <li data-ref="--icbh"><output></output></li>
                 <li data-ref="--icbw"><output></output></li>
+                <li data-ref="--d-ch"><output></output></li>
+                <li data-ref="--d-cw"><output></output></li>
     
                 <li data-ref="--w-ih"><output></output></li>
                 <li data-ref="--w-iw"><output></output></li>
