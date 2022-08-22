@@ -42,7 +42,7 @@ const {
 } = document.querySelector("#layoutviewport").getBoundingClientRect();
 ```
 
-💡 You might think `window.innerWidth` and `window.innerHeight` might also get you these values, but that’s not the case. Some browsers resize those values as you pinch-zoom in.
+💡 You might think [`window.innerWidth` and `window.innerHeight`](./sizing.md#windowinnerwidth-and-windowinnerheight) might also get you these values, but that’s not the case: Some browsers resize those values as you pinch-zoom in.
 
 ## Relation to `position: fixed`
 

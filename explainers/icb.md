@@ -11,7 +11,7 @@ It takes its size from [the Layout Viewport](./layout-viewport.md) _(for continu
 
 > For continuous media, it has the dimensions of the viewport[^fn2] and is anchored at the canvas origin
 
-[^fn2]: Back when CSS2 was defined, it had no notion of different viewports. When spec talk about _“the Viewport”_, they mean [the Layout Viewport](./layout-viewport.md).
+[^fn2]: Back when CSS2 was defined, it had no notion of different viewports. When specs talk about _“the Viewport”_, they mean [the Layout Viewport](./layout-viewport.md).
 
 ## Visualization
 
