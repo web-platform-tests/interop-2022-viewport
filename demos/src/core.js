@@ -224,11 +224,19 @@ const getWindowValues = () => {
     let {
         innerWidth,
         innerHeight,
+        outerWidth,
+        outerHeight,
+        screenX,
+        screenY,
     } = window;
 
     return {
         innerWidth,
         innerHeight,
+        outerWidth,
+        outerHeight,
+        screenX,
+        screenY,
     };
 }
 export { getWindowValues };
