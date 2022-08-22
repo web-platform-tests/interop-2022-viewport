@@ -51,7 +51,11 @@ To authors this seems weird, but [its behavior is explained below](#size-of-the-
 
 ## Types of Viewport-percentage Lengths
 
-Since [the Layout Viewport can change size](./layout-viewport.md#size) as UA UI elements contract or expand, there are different types specific Layout Viewport Sizes that [can be defined](https://drafts.csswg.org/css-values-4/#viewport-relative-lengths). Each type of specific Layout Viewport has Viewport-percentage Lengths assigned with it.
+Since [the Layout Viewport can change size](./layout-viewport.md#size) as UA UI elements contract or expand, there are different types specific Layout Viewport Sizes that [can be defined](https://drafts.csswg.org/css-values-4/#viewport-relative-lengths).
+
+![Illustration](./illustrations/viewport-units-mobile-naming-things.png)
+
+Each type of specific Layout Viewport has Viewport-percentage Lengths assigned with it.
 ### The Large Viewport
 
 The Large Viewport is the viewport sized assuming any UA UI Elements that are dynamically expanded and retracted to be *retracted*. It has the `l`-prefix, so its linked units are `lvh` / `lvw` / `lvb` / `lvi` / `lvmin` / `lvmax`.
