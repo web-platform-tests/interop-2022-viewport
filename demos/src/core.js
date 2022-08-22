@@ -211,7 +211,8 @@ export { getLayoutViewportValues };
 const getICBValues = () => {
     // @NOTE: Instead of getting the values through by measuring the root element
     // (i.e `document.documentElement,getBoundingClientRect()`), we can use
-    // `documentElement.clientHeight/clientWidth` which yield the same values
+    // `documentElement.clientHeight/clientWidth` which yield the correct values.
+    // These values do not require the ICB to be sized as 100% x 100%.
     return {
         width: document.documentElement.clientWidth,
         height: document.documentElement.clientHeight,
