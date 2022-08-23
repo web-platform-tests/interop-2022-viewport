@@ -22,10 +22,10 @@
 ### Dynamic User-Agent UI Elements
 
 @TODO:
-### Overscrolling
+### Overscrolling and Bounce Scroll
 
-@TODO: 
+Some browsers support overscrolling the scrollport. When doing this with a swipe gestured, they might bounce back. This behavior is available on macOS, iOS _(and maybe Windows, but that is currently untested). Android does not support this.
 
-### Bounce Scroll
+Note: When overscrolling slowly at the top edge in Mobile Browsers you might trigger a pull-to-refresh. In this part we are focussing on overscrolling while not triggering pull-to-refresh.
 
-@TODO: 
+Overscrolling is [covered in the “CSS Overscroll Behavior Module Level 1” spec](https://drafts.csswg.org/css-overscroll-1/).

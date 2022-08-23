@@ -147,6 +147,10 @@ The value of the `dv*` units are not updated immediately:
 
 Some browsers allow the Dynamic Viewport grow larger than the Large Viewport. This is the case when users over pinch-zoom out in all browsers on iOS.
 
+### Effect of Overscrolling / Bouncy Scroll
+
+These units follow the size of the [Layout Viewport](./layout-viewport.md). Since the Layout Viewport’s size is not affected by Overscrolling, these units aren’t either.
+
 ## Issues
 
 We are tracking issues using [the label `Viewport Units`](https://github.com/web-platform-tests/interop-2022-viewport/issues?q=is%3Aissue+label%3A%22Viewport+Units%22)

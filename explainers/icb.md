@@ -90,6 +90,10 @@ When pinch-zooming in the ICB does not get resized because the [Layout Viewport]
 
 See [Virtual Keyboard: Findings](./virtual-keyboard.md#findings).
 
+### Effect of Overscrolling / Bouncy Scroll
+
+When [overscrolling](./scrolling.md#overscrolling-and-rubber-banding) – on platforms that support it - the ICB retains its size and bounces along with the rubber banding as it happens.
+
 ### Relation to Viewport Units
 
 Their name might not indicate it, but the [Viewport Units](./viewport-units.md) are sized in relation to [the ICB](./icb.md). See [Viewport Units](./viewport-units.md) for details.
