@@ -226,8 +226,6 @@ const getWindowValues = () => {
         innerHeight,
         outerWidth,
         outerHeight,
-        screenX,
-        screenY,
     } = window;
 
     return {
@@ -235,11 +233,22 @@ const getWindowValues = () => {
         innerHeight,
         outerWidth,
         outerHeight,
-        screenX,
-        screenY,
     };
 }
 export { getWindowValues };
+
+const getScreenValues = () => {
+    let {
+        width,
+        height,
+    } = screen;
+
+    return {
+        width,
+        height,
+    };
+}
+export { getScreenValues };
 
 const initOptionsModal = (update) => {
     if (!document.querySelector('#btnOptions')) return;

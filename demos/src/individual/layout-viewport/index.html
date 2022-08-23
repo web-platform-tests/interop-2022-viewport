@@ -25,6 +25,9 @@
 
             const lv = core.getLayoutViewportValues();
             core.write(lv, document.querySelector("#lv-values"), 'layout viewport');
+
+            const sv = core.getScreenValues();
+            core.write(sv, document.querySelector("#screen-values"), 'screen');
         };
 
         core.init(update);
@@ -36,9 +39,10 @@
     
     <div id="debug">
         <h1>Layout Viewport Debugger</h1>
+        <div id="window-values"></div>
         <div id="lv-values"></div>
         <div id="icb-values"></div>
-        <div id="window-values"></div>
+        <div id="screen-values"></div>
     </div>
 
     <div id="layoutviewport"></div>
