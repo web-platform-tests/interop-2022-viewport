@@ -87,15 +87,50 @@ Depending on wether you are using `position: absolute` or `position: fixed`, you
 
 👉 Try it out: [Visual Viewport](https://interop-2022-viewport.netlify.app/individual/visual-viewport/)
 
-## Measuring the Visual Viewport
-
-As mentioned above, the Visual Viewport API can be used for this. The `width` and `height` properties expose its size.
-
-Note that the size of Visual Viewport will be equal to or less than the [Layout Viewport](./layout-viewport.md)
-
 ## Findings
 
 💡 These findings are a textual representation of the [test results table](https://goo.gle/interop-2022-viewport-testresults).
+
+## Size
+
+As mentioned above, the Visual Viewport API can be used for this. Note that the size of Visual Viewport will be equal to or less than the [Layout Viewport](./layout-viewport.md)
+
+![Illustration](./illustrations/visual-viewport-desktop.png)
+![Illustration](./illustrations/visual-viewport-mobile--uaui-expanded.png)
+![Illustration](./illustrations/visual-viewport-mobile--uaui-retracted.png)
+
+### Effect of scrolling
+
+The Visual Viewport updates nicely as you scroll and shifts down with the scroll position.
+
+![Illustration](./illustrations/visual-viewport-desktop.png)
+
+When UA UI Elements expand/contract is also updates accordingly, except in Edge on Android where there’s a few pixels missing. This bug is corrected as soon as you stop the gesture _(i.e. lift up your finger)_, then the correct values are flushed.
+
+![Illustration](./illustrations/visual-viewport-mobile--uaui-expanded.png)
+![Illustration](./illustrations/visual-viewport-mobile--uaui-retracted.png)
+
+### Effect of scrollbars
+
+The presence of [Classic Scrollbars](./scrolling.md#classic-scrollbars) take away space from the Visual Viewport
+
+### Effect of pinch-zoom
+
+The Visual Viewport updates nicely as you pinch zoom, except in Safari on Desktop: there the values are only updated when the gesture is finished  _(i.e. lifting up your fingers)_.
+
+![Illustration](./illustrations/visual-viewport-desktop--pinch-zoomed-in-2.png)
+
+When you over pinch-zooming out in browsers that allow this _(i.e. all based on WebKit)_ something funky happens with the position and dimensions:
+
+- The position gets anchored to `0,0` of the canvas
+- The `width`/`height` is measured from the `0,0` origin to the right/bottom edge of the [Layout Viewport](./layout-viewport.md)
+
+![Screenshot](./screenshots/visual-viewport-mobile-safari-over-pinch-zoom-out-1.jpeg)
+![Screenshot](./screenshots/visual-viewport-mobile-safari-over-pinch-zoom-out-2.jpeg)
+
+### Effect of the Virtual Keyboard
+
+See [Virtual Keyboard: Findings](./virtual-keyboard.md#findings).
 
 ### Effect of Overscrolling / Bouncy Scroll
 
