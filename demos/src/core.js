@@ -321,7 +321,7 @@ const initVisualViewportIntegration = () => {
     });
 }
 
-const init = (update) => {
+const init = (update, autoTick = 0) => {
     initOptionsModal(update);
     initVirtualKeyboardIntegration();
     initVisualViewportIntegration();
@@ -333,5 +333,9 @@ const init = (update) => {
 
     // Make sure we have values on load
     setTimeout(update, 100);
+
+    if (autoTick) {
+        setInterval(update, autoTick);
+    }
 }
 export { init };
