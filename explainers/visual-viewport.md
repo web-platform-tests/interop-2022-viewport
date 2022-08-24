@@ -116,17 +116,20 @@ The presence of [Classic Scrollbars](./scrolling.md#classic-scrollbars) take awa
 
 ### Effect of pinch-zoom
 
-The Visual Viewport updates nicely as you pinch zoom, except in Safari on Desktop: there the values are only updated when the gesture is finished  _(i.e. lifting up your fingers)_.
+The Visual Viewport updates nicely as you pinch zoom
 
 ![Illustration](./illustrations/visual-viewport-desktop--pinch-zoomed-in-2.png)
 
-When you over pinch-zooming out in browsers that allow this _(i.e. all based on WebKit)_ something funky happens with the position and dimensions:
+In Safari on Desktop the values do not update immediately as you pinch-zoom, but are only updated when the gesture is finished  _(i.e. lifting up your fingers)_.
 
-- The position gets anchored to `0,0` of the canvas
-- The `width`/`height` is measured from the `0,0` origin to the right/bottom edge of the [Layout Viewport](./layout-viewport.md)
+When you over pinch-zooming out in browsers that allow this _(i.e. all based on WebKit)_ something funky happens with the position and dimensions of the Visual Viewport:
 
-![Screenshot](./screenshots/visual-viewport-mobile-safari-over-pinch-zoom-out-1.jpeg)
-![Screenshot](./screenshots/visual-viewport-mobile-safari-over-pinch-zoom-out-2.jpeg)
+- Its position gets anchored to `0,0` of the canvas. This origin moves between the top-left edge of the [Large and Small Viewport](./viewport-units.md#the-large-viewport) as you move around.
+- The `width`/`height` is measured from that `0,0` origin _(which can move)_ to the right/bottom edge of the [Layout Viewport](./layout-viewport.md)
+
+👀 See [Screenshot 1 of Safari on iOS](./screenshots/visual-viewport-mobile-safari-over-pinch-zoom-out-1.jpeg) and [Screenshot 2 of Safari on iOS](./screenshots/visual-viewport-mobile-safari-over-pinch-zoom-out-2.jpeg)
+
+👀 See [Recording of Safari on iOS](./videos/visual-viewport-mobile-over-pinch-zoom-out--safari.mp4)
 
 ### Effect of the Virtual Keyboard
 
@@ -136,9 +139,15 @@ See [Virtual Keyboard: Findings](./virtual-keyboard.md#findings).
 
 When [overscrolling](./scrolling.md#overscrolling-and-rubber-banding), WebKit allows negative values for `window.scrollX` and `window.scrollY`. This is the only engine to expose this. While doing so, the values for the Visual Viewport’s `pageTop` and `pageLeft` also become negative, while its `height` and `width` remain the same size. Because of this, the visualization of the Visual Viewport can get clipped by the [ICB](./icb.md) which [does bounce with the rubber banding effect](./icb.md#effect-of-overscrolling--bouncy-scroll)
 
+👀 See [Recording of Safari on Desktop](./videos/visual-viewport-desktop-overscroll--safari.mp4) and [Recording of Safari on iOS](./videos/visual-viewport-mobile-overscroll--safari.mp4)
+
 Other engines that do not allow negative values for `window.scrollX` and `window.scrollY` as it has a rubber banding effect going on – i.e. Chrome on macOS and Firefox on macOS – follow the same behavior as the [ICB](./icb.md): the bounce with the effect. The values for the `height` and `width` remain the same as it rubber bands.
 
+👀 See [Recording of Firefox on Desktop](./videos/visual-viewport-desktop-overscroll--firefox.mp4) and [Recording of Chrome on Desktop](./videos/visual-viewport-desktop-overscroll--chrome.mp4)
+
 In engines that keep the [Layout Viewport](./layout-viewport.md) in place as the browser rubber bands the values for `offsetTop` and `offsetLeft` remain `0`.
+
+👀 See [Recording of Firefox on Desktop](./videos/visual-viewport-desktop-overscroll--firefox.mp4) and [Recording of Chrome with flag on Desktop](./videos/visual-viewport-desktop-overscroll--chrome-with-flag.mp4)
 
 ## Issues
 

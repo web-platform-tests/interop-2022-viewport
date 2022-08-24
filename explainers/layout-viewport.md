@@ -97,7 +97,11 @@ When [overscrolling](./scrolling.md#overscrolling-and-rubber-banding), some brow
 
 > If an element uses [fixed positioning](#relation-to-position-fixed) and is positioned relative to the [initial containing block](./icb.md), or is a sticky positioned element which is currently stuck to the viewport, then when the root scroller experiences "overscroll", that element must not overscroll with the rest of the document’s content; it must instead remain positioned as if the scroller was at its minimum/maximum scroll position, whichever it will return to when the overscroll is finished.
 
-This behavior newly specced behavior is supported by all WebKit-based browsers on iOS (Safari + Chrome + Edge + Firefox), Firefox on macOS, Chrome on macOS _(with a feature flag)_. This behavior is not supported by Safari on macOS. Android devices do not support overscrolling, so this updated behavior does not affect them.
+This behavior newly specced behavior is supported by all WebKit-based browsers on iOS (Safari + Chrome + Edge + Firefox), Firefox on macOS, Chrome on macOS _(with a feature flag)_.
+
+👀 See [Recording of Chrome on Desktop](./videos/visual-viewport-desktop-overscroll--chrome.mp4) vs [Recording of Chrome with flag on Desktop](./videos/visual-viewport-desktop-overscroll--chrome-with-flag.mp4)
+
+This behavior is not supported by Safari on macOS. Android devices do not support overscrolling, so this updated behavior does not affect them.
 ### Relation to Viewport Units
 
 Unlike its name suggest, the [Viewport Units](./viewport-units.md) are not sized in relation to the Layout Viewport. Instead, they are sized in relation to [the ICB](./icb.md). See [Viewport Units](./viewport-units.md) for details.
