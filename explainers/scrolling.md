@@ -38,7 +38,7 @@ Classic Scrollbars are scrollbars that are placed in a dedicated Scrollbar Gutte
 @TODO:
 ### Overscrolling and Bounce Scroll
 
-Some browsers support overscrolling the scrollport. When doing this with a swipe gestured, they might bounce back. This behavior is available on macOS, iOS _(and maybe Windows, but that is currently untested). Android does not support this.
+Some browsers support overscrolling the scrollport. When doing this with a swipe gestured, they might bounce back. This behavior is available on macOS, iOS _(and maybe Windows, but that is currently untested)_. Android does not support this.
 
 Note: When overscrolling slowly at the top edge in Mobile Browsers you might trigger a pull-to-refresh. In this part we are focussing on overscrolling while not triggering pull-to-refresh.
 
