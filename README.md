@@ -3,6 +3,9 @@
 Work on the [viewport investigation project](https://github.com/web-platform-tests/interop-2022/issues/41) for Interop 2022.
 
 > To sort out any confusion about what “viewport” means, and what browsers _(especially on mobile devices)_ should be doing with various viewport measurements & sizing. To make recommendations for what should change to improve interoperability.
+>
+> - Open any issues at CSSWG, WHATWG, wherever if we find underspecified standards on what these measurements should be in relationship to the viewport — so that the appropriate standards group can take it from there & define any missing details.
+> - Open any issues/bugs with the appropriate browsers, noting places where they are not aligned with the standard. Or if the standard is unclear, where they are not aligned with each other.
 
 ## Definitions and Findings
 
