@@ -61,3 +61,26 @@ body {
 #bars-fixed .bar {
     --bar-extra-offset: calc((var(--bar-gap) + var(--bar-height)) * 5);
 }
+
+/* Show warning in browsers with no support */
+.warning {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    background-color: yellow;
+    border: 1px solid #333;
+    margin: 0.2rem 0;
+}
+.warning :first-child {
+    margin-top: 0;
+}
+.warning :last-child {
+    margin-bottom: 0;
+}
+@supports(scrollbar-gutter: stable) {
+    .warning {
+        display: none;
+    }
+}
