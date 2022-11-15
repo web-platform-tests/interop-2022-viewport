@@ -62,6 +62,33 @@ body {
     --bar-extra-offset: calc((var(--bar-gap) + var(--bar-height)) * 5);
 }
 
+/* Bar Options. O yeah, we need :has() but firefox don’t play nice yet */
+#optBarsHideBars {
+    display: none;
+}
+#optBarsHideBars:checked ~ #bars-fixed,
+#optBarsHideBars:checked ~ #bars-absolute {
+    display: none;
+}
+#optBarsHideBars:checked ~ #debug,
+#optBarsHideBars:checked ~ #inputwrapper {
+    padding-top: 0;
+}
+[for="optBarsHideBars"] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+[for="optBarsHideBars"]::before {
+    font-size: 3rem;
+}
+#optBarsHideBars ~ #options [for="optBarsHideBars"]::before {
+    content: '☐';
+}
+#optBarsHideBars:checked ~ #options [for="optBarsHideBars"]::before {
+    content: '☑';
+}
+
 /* Show warning in browsers with no support */
 .warning {
     position: fixed;
