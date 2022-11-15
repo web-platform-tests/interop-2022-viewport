@@ -5,6 +5,7 @@
     <title>scrollbar-gutter: stable both-edges (long content) – Interop 2022 Viewport Investigation Effort Demo Pages</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../../base.css" />
+    <link rel="stylesheet" href="../scrollbar-gutter-bars.css" />
 
     <style>
         html {
@@ -14,6 +15,7 @@
 
     <script type="module">
         import * as core from '../../core.js';
+        import * as bars from '../scrollbar-gutter-bars.js';
 
         const update = () => {
 
@@ -28,6 +30,7 @@
         };
 
         core.init(update);
+        bars.init(250);
     </script>
 </head>
 
@@ -46,6 +49,22 @@
 
     <div id="layoutviewport"></div>
     <div class="heightdebugger"></div>
+
+    <div id="bars-absolute">
+        <div class="bar" data-unit="vw" data-position="absolute" style="background-color: rgb(244, 180, 123);"><span class="text">100vw position: absolute (<span class="size">???</span>px)</span></div>
+        <div class="bar" data-unit="lvw" data-position="absolute" style="background-color: rgb(227, 159, 99);"><span class="text">100lvw position: absolute (<span class="size">???</span>px)</span></div>
+        <div class="bar" data-unit="svw" data-position="absolute" style="background-color: rgb(205, 139, 81);"><span class="text">100svw position: absolute (<span class="size">???</span>px)</span></div>
+        <div class="bar" data-unit="dvw" data-position="absolute" style="background-color: rgb(171, 119, 73);"><span class="text">100dvw position: absolute (<span class="size">???</span>px)</span></div>
+        <div class="bar" data-unit="%" data-position="absolute" style="background-color: rgb(128, 100, 77);"><span class="text">100% position: absolute (<span class="size">???</span>px)</span></div>
+    </div>
+
+    <div id="bars-fixed">
+        <div class="bar" data-unit="vw" data-position="fixed" style="background-color: rgb(123, 194, 244);"><span class="text">100vw position: fixed (<span class="size">???</span>px)</span></div>
+        <div class="bar" data-unit="lvw" data-position="fixed" style="background-color: rgb(99, 174, 227);"><span class="text">100lvw position: fixed (<span class="size">???</span>px)</span></div>
+        <div class="bar" data-unit="svw" data-position="fixed" style="background-color: rgb(81, 153, 205);"><span class="text">100svw position: fixed (<span class="size">???</span>px)</span></div>
+        <div class="bar" data-unit="dvw" data-position="fixed" style="background-color: rgb(73, 131, 171);"><span class="text">100dvw position: fixed (<span class="size">???</span>px)</span></div>
+        <div class="bar" data-unit="%" data-position="fixed" style="background-color: rgb(77, 106, 128);"><span class="text">100% position: fixed (<span class="size">???</span>px)</span></div>
+    </div>
 
     <button id="btnOptions">options</button>
     <dialog id="options">

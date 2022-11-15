@@ -1,0 +1,63 @@
+body {
+    --bar-gap: 0.2em;
+    --bar-height: 1.6em;
+    --bar-extra-offset: 0px;
+}
+
+/* We’ve got 10 bars at the top. Shift these elements down */
+#debug, #inputwrapper {
+    padding-top: calc((var(--bar-gap) + var(--bar-height)) * 10);
+}
+
+/* We really need sibling-count() and sibling-index(), don’t we? */
+.bar:nth-child(1) {
+    --i: 1;
+}
+.bar:nth-child(2) {
+    --i: 2;
+}
+.bar:nth-child(3) {
+    --i: 3;
+}
+.bar:nth-child(4) {
+    --i: 4;
+}
+.bar:nth-child(5) {
+    --i: 5;
+}
+
+/* Styling of a bar. Each bar gets shifted down a little more, based on its index*/
+.bar {
+    box-sizing: border-box;
+    top: calc(((var(--bar-gap) + var(--bar-height)) * (var(--i) - 1)) + var(--bar-gap) + var(--bar-extra-offset));
+    height: var(--bar-height);
+    padding: var(--bar-gap);
+    line-height: calc(var(--bar-height) - var(--bar-gap) - var(--bar-gap));
+    background: rgb(0 0 0 / 0.2);
+}
+.bar[data-position="absolute"] {
+    position: absolute;
+}
+.bar[data-position="fixed"] {
+    position: fixed;
+}
+.bar[data-unit="vw"] {
+    width: 100vw;
+}
+.bar[data-unit="lvw"] {
+    width: 100lvw;
+}
+.bar[data-unit="svw"] {
+    width: 100svw;
+}
+.bar[data-unit="dvw"] {
+    width: 100dvw;
+}
+.bar[data-unit="%"] {
+    width: 100%;
+}
+
+/* Push the fixedpos bars below the 5 abspos ones */
+#bars-fixed .bar {
+    --bar-extra-offset: calc((var(--bar-gap) + var(--bar-height)) * 5);
+}
