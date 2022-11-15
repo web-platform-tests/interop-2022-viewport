@@ -22,6 +22,10 @@
         import * as core from '../../core.js';
 
         const update = () => {
+
+            const icbv = core.getICBValues();
+            core.write(icbv, document.querySelector("#icb-values"), 'icb (document.documentElement)');
+
             const sv = core.getScrollValues();
             core.write(sv, document.querySelector("#s-values"), 'Scroll');
 
@@ -38,6 +42,7 @@
 
     <div id="debug">
         <h1><code>scrollbar-gutter: stable both-edges;</code> Debugger</h1>
+        <div id="icb-values"></div>
         <div id="lv-values"></div>
         <div id="s-values"></div>
         <div id="b-values"></div>
