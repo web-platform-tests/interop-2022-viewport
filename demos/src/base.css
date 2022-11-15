@@ -108,7 +108,7 @@ input {
 }
 
 /* Tweak Lists */
-ul, ol {
+:not(li) > ul, :not(li) > ol {
 	margin-block-start: 1em;
 	margin-block-end: 1em;
 	padding-inline-start: 2em;

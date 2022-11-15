@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>scrollbar-gutter: stable (short content) – Interop 2022 Viewport Investigation Effort Demo Pages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../base.css" />
+
+    <style>
+        html {
+            scrollbar-gutter: stable;
+        }
+        body {
+            height: 100%;
+        }
+        .heightdebugger {
+            background-size: 100% 100%;
+        }
+    </style>
+
+    <script type="module">
+        import * as core from '../../core.js';
+
+        const update = () => {
+            const sv = core.getScrollValues();
+            core.write(sv, document.querySelector("#s-values"), 'Scroll');
+
+            const wv = core.getWindowValues();
+            core.write(wv, document.querySelector("#window-values"), 'window');
+        };
+
+        core.init(update);
+    </script>
+</head>
+
+<body translate="no" data-vv-positioning="absolute">
+    <div id="inputwrapper"><input type="text" /></div>
+
+    <div id="debug">
+        <h1><code>scrollbar-gutter: stable;</code> Debugger</h1>
+        <div id="lv-values"></div>
+        <div id="s-values"></div>
+        <div id="b-values"></div>
+        <div id="window-values"></div>
+        <div id="eventlog"></div>
+    </div>
+
+    <div id="layoutviewport"></div>
+    <div class="heightdebugger"></div>
+
+    <button id="btnOptions">options</button>
+    <dialog id="options">
+        <header>
+            <button id="btnOptionsClose">close</button>
+            <h1>Options</h1>
+        </header>
+        <section>
+            <h3>Virtual Keyboard</h3>
+            <div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
+        </section>
+    </dialog>
+</body>
+</html>
