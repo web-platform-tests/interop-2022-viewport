@@ -1,113 +1,114 @@
 body {
-    --bar-gap: 0.2em;
-    --bar-height: 1.6em;
-    --bar-extra-offset: 0px;
+	--bar-gap: 0.2em;
+	--bar-height: 1.6em;
+	--bar-extra-offset: 0px;
 }
 
 /* We’ve got 10 bars at the top. Shift these elements down */
-#debug, #inputwrapper {
-    padding-top: calc((var(--bar-gap) + var(--bar-height)) * 10);
+#debug,
+#inputwrapper {
+	padding-top: calc((var(--bar-gap) + var(--bar-height)) * 10);
 }
 
 /* We really need sibling-count() and sibling-index(), don’t we? */
 .bar:nth-child(1) {
-    --i: 1;
+	--i: 1;
 }
 .bar:nth-child(2) {
-    --i: 2;
+	--i: 2;
 }
 .bar:nth-child(3) {
-    --i: 3;
+	--i: 3;
 }
 .bar:nth-child(4) {
-    --i: 4;
+	--i: 4;
 }
 .bar:nth-child(5) {
-    --i: 5;
+	--i: 5;
 }
 
 /* Styling of a bar. Each bar gets shifted down a little more, based on its index*/
 .bar {
-    box-sizing: border-box;
-    top: calc(((var(--bar-gap) + var(--bar-height)) * (var(--i) - 1)) + var(--bar-gap) + var(--bar-extra-offset));
-    height: var(--bar-height);
-    padding: var(--bar-gap);
-    line-height: calc(var(--bar-height) - var(--bar-gap) - var(--bar-gap));
-    background: rgb(0 0 0 / 0.2);
+	box-sizing: border-box;
+	top: calc(((var(--bar-gap) + var(--bar-height)) * (var(--i) - 1)) + var(--bar-gap) + var(--bar-extra-offset));
+	height: var(--bar-height);
+	padding: var(--bar-gap);
+	line-height: calc(var(--bar-height) - var(--bar-gap) - var(--bar-gap));
+	background: rgb(0 0 0 / 0.2);
 }
 .bar[data-position="absolute"] {
-    position: absolute;
+	position: absolute;
 }
 .bar[data-position="fixed"] {
-    position: fixed;
+	position: fixed;
 }
 .bar[data-unit="vw"] {
-    width: 100vw;
+	width: 100vw;
 }
 .bar[data-unit="lvw"] {
-    width: 100lvw;
+	width: 100lvw;
 }
 .bar[data-unit="svw"] {
-    width: 100svw;
+	width: 100svw;
 }
 .bar[data-unit="dvw"] {
-    width: 100dvw;
+	width: 100dvw;
 }
 .bar[data-unit="%"] {
-    width: 100%;
+	width: 100%;
 }
 
 /* Push the fixedpos bars below the 5 abspos ones */
 #bars-fixed .bar {
-    --bar-extra-offset: calc((var(--bar-gap) + var(--bar-height)) * 5);
+	--bar-extra-offset: calc((var(--bar-gap) + var(--bar-height)) * 5);
 }
 
 /* Bar Options. O yeah, we need :has() but firefox don’t play nice yet */
 #optBarsHideBars {
-    display: none;
+	display: none;
 }
 #optBarsHideBars:checked ~ #bars-fixed,
 #optBarsHideBars:checked ~ #bars-absolute {
-    display: none;
+	display: none;
 }
 #optBarsHideBars:checked ~ #debug,
 #optBarsHideBars:checked ~ #inputwrapper {
-    padding-top: 0;
+	padding-top: 0;
 }
 [for="optBarsHideBars"] {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 [for="optBarsHideBars"]::before {
-    font-size: 3rem;
+	font-size: 3rem;
 }
 #optBarsHideBars ~ #options [for="optBarsHideBars"]::before {
-    content: '☐';
+	content: "☐";
 }
 #optBarsHideBars:checked ~ #options [for="optBarsHideBars"]::before {
-    content: '☑';
+	content: "☑";
 }
 
 /* Show warning in browsers with no support */
 .warning {
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    right: 1rem;
-    padding: 1rem;
-    background-color: yellow;
-    border: 1px solid #333;
-    margin: 0.2rem 0;
+	position: fixed;
+	bottom: 1rem;
+	left: 1rem;
+	right: 1rem;
+	padding: 1rem;
+	background-color: yellow;
+	border: 1px solid #333;
+	margin: 0.2rem 0;
 }
 .warning :first-child {
-    margin-top: 0;
+	margin-top: 0;
 }
 .warning :last-child {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
-@supports(scrollbar-gutter: stable) {
-    .warning {
-        display: none;
-    }
+@supports (scrollbar-gutter: stable) {
+	.warning {
+		display: none;
+	}
 }

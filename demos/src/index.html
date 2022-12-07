@@ -1,91 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8" />
-    <title>Interop 2022 Viewport Investigation Effort Demo Pages</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="base.css" />
-    <style>
-        body {
-            display: flex;
-        }
+	<meta charset="UTF-8" />
+	<title>Interop 2022 Viewport Investigation Effort Demo Pages</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="base.css" />
+	<style>
+		body {
+			display: flex;
+		}
 
-        main {
-            max-width: 80ch;
-            width: 90%;
-            margin: 0 auto;
-            background: rgb(255 255 255 / 0.5);
+		main {
+			max-width: 80ch;
+			width: 90%;
+			margin: 0 auto;
+			background: rgb(255 255 255 / 0.5);
 			border: 1px solid rgb(0 0 0 / 0.2);
-            padding: 1rem;
+			padding: 1rem;
 			margin: 3rem auto;
-        }
-    </style>
-    <script type="module">
-        import * as core from './core.js';
+		}
+	</style>
+	<script type="module">
+		import * as core from './core.js';
 
-        const update = () => {
-            document.body.setAttribute('data-vv-positioning', document.querySelector('[name="vvPosition"]:checked')?.value ?? 'absolute');
+		const update = () => {
+			document.body.setAttribute('data-vv-positioning', document.querySelector('[name="vvPosition"]:checked')?.value ?? 'absolute');
 
-            const vvv = core.getVisualViewPortValues({
-                clampOffsets: true,
-            });
-            core.syncVisualViewportValuesToCustomProperties(vvv);
-        };
+			const vvv = core.getVisualViewPortValues({
+				clampOffsets: true,
+			});
+			core.syncVisualViewportValuesToCustomProperties(vvv);
+		};
 
-        core.init(update);
-    </script>
+		core.init(update);
+	</script>
 </head>
+
 <body translate="no" data-vv-positioning="absolute">
-    <main>
-        <h1>Interop 2022 Viewport Investigation Effort Demo Pages</h1>
+	<main>
+		<h1>Interop 2022 Viewport Investigation Effort Demo Pages</h1>
 
-        <p>A collection of demos that allow you to debug and test the behavior of certain viewport and viewport-related aspects.</p>
+		<p>A collection of demos that allow you to debug and test the behavior of certain viewport and viewport-related aspects.</p>
 
-        <p>These demos are part of the <a href="https://github.com/web-platform-tests/interop-2022-viewport">Viewport Investigation Effort</a></p>
+		<p>These demos are part of the <a href="https://github.com/web-platform-tests/interop-2022-viewport">Viewport Investigation Effort</a></p>
 
-        <h2>Individual Viewports and related aspects</h2>
-        <ol>
-            <li><a href="individual/icb/">Initial Containing Block (ICB)</a></li>
-            <li><a href="individual/layout-viewport/">Layout Viewport</a></li>
-            <li><a href="individual/visual-viewport/">Visual Viewport</a></li>
-            <li><a href="individual/virtual-keyboard/">Virtual Keyboard API</a></li>
-        </ol>
+		<h2>Individual Viewports and related aspects</h2>
+		<ol>
+			<li><a href="individual/icb/">Initial Containing Block (ICB)</a></li>
+			<li><a href="individual/layout-viewport/">Layout Viewport</a></li>
+			<li><a href="individual/visual-viewport/">Visual Viewport</a></li>
+			<li><a href="individual/virtual-keyboard/">Virtual Keyboard API</a></li>
+		</ol>
 
-        <h2>Viewport Units</h2>
-        <ol>
-            <li>
+		<h2>Viewport Units</h2>
+		<ol>
+			<li>
 				<a href="combined/viewport-units/">Viewport Units + <code>window.innerHeight</code></a><br>
 				<small><i>(Adapted from <a href="https://bokand.github.io/demo/urlbarsize.html">https://bokand.github.io/demo/urlbarsize.html</a>)</i></small>
 			</li>
-            <li>
-                <a href="https://devinrousso.com/demo/WebKit/css/viewport-units.html">Viewport Units + <code>-webkit-fill-available</code></a>
-            </li>
-        </ol>
+			<li>
+				<a href="https://devinrousso.com/demo/WebKit/css/viewport-units.html">Viewport Units + <code>-webkit-fill-available</code></a>
+			</li>
+		</ol>
 
-        <h2>Events / All-in-one</h2>
+		<h2>Events / All-in-one</h2>
 
-        <ul>
-            <li><a href="combined/icb-fixed-visual/">ICB + Fixed Viewport + Visual Viewport</a></li>
-        </ul>
+		<ul>
+			<li><a href="combined/icb-fixed-visual/">ICB + Fixed Viewport + Visual Viewport</a></li>
+		</ul>
 
-        <h2>Scrollbar Gutter</h2>
+		<h2>Scrollbar Gutter</h2>
 
-        <ul>
-            <li>
-                <code>scrollbar-gutter: stable;</code>
-                <ul>
-                    <li><a href="scrollbar-gutter/short-stable/">Short Content</a></li>
-                    <li><a href="scrollbar-gutter/long-stable/">Long Content</a></li>
-                </ul>
-            </li>
-            <li>
-                <code>scrollbar-gutter: stable both-edges;</code>
-                <ul>
-                    <li><a href="scrollbar-gutter/short-both-edges/">Short Content</a></li>
-                    <li><a href="scrollbar-gutter/long-both-edges/">Long Content</a></li>
-                </ul>
-            </li>
-        </ul>
+		<ul>
+			<li>
+				<code>scrollbar-gutter: stable;</code>
+				<ul>
+					<li><a href="scrollbar-gutter/short-stable/">Short Content</a></li>
+					<li><a href="scrollbar-gutter/long-stable/">Long Content</a></li>
+				</ul>
+			</li>
+			<li>
+				<code>scrollbar-gutter: stable both-edges;</code>
+				<ul>
+					<li><a href="scrollbar-gutter/short-both-edges/">Short Content</a></li>
+					<li><a href="scrollbar-gutter/long-both-edges/">Long Content</a></li>
+				</ul>
+			</li>
+		</ul>
 
 		<h2>Legend</h2>
 		<ul>
@@ -93,10 +95,10 @@
 			<li>Blue dotted line = Layout Viewport</li>
 			<li>Orange slanted line = Visual Viewport</li>
 		</ul>
-    </main>
+	</main>
 
-    <div id="visualviewport"></div>
-    <div id="layoutviewport"></div>
+	<div id="visualviewport"></div>
+	<div id="layoutviewport"></div>
 
-    <div class="heightdebugger"></div>
+	<div class="heightdebugger"></div>
 </body>

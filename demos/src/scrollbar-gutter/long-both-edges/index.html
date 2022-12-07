@@ -1,91 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8" />
-    <title>scrollbar-gutter: stable both-edges (long content) – Interop 2022 Viewport Investigation Effort Demo Pages</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="../../base.css" />
-    <link rel="stylesheet" href="../scrollbar-gutter-bars.css" />
+	<meta charset="UTF-8" />
+	<title>scrollbar-gutter: stable both-edges (long content) – Interop 2022 Viewport Investigation Effort Demo Pages</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="../../base.css" />
+	<link rel="stylesheet" href="../scrollbar-gutter-bars.css" />
 
-    <style>
-        html {
-            scrollbar-gutter: stable both-edges;
-        }
-    </style>
+	<style>
+		html {
+			scrollbar-gutter: stable both-edges;
+		}
+	</style>
 
-    <script type="module">
-        import * as core from '../../core.js';
-        import * as bars from '../scrollbar-gutter-bars.js';
+	<script type="module">
+		import * as core from '../../core.js';
+		import * as bars from '../scrollbar-gutter-bars.js';
 
-        const update = () => {
+		const update = () => {
 
-            const icbv = core.getICBValues();
-            core.write(icbv, document.querySelector("#icb-values"), 'icb (document.documentElement)');
+			const icbv = core.getICBValues();
+			core.write(icbv, document.querySelector("#icb-values"), 'icb (document.documentElement)');
 
-            const icbv2 = core.getICBValuesByMeasuringTheRootElement();
-            core.write(icbv2, document.querySelector("#icb2-values"), 'icb (getBoundingClientRect)');
+			const icbv2 = core.getICBValuesByMeasuringTheRootElement();
+			core.write(icbv2, document.querySelector("#icb2-values"), 'icb (getBoundingClientRect)');
 
-            const lv = core.getLayoutViewportValues();
-            core.write(lv, document.querySelector("#lv-values"), 'layout viewport');
+			const lv = core.getLayoutViewportValues();
+			core.write(lv, document.querySelector("#lv-values"), 'layout viewport');
 
-            const wv = core.getWindowValues();
-            core.write(wv, document.querySelector("#window-values"), 'window');
-        };
+			const wv = core.getWindowValues();
+			core.write(wv, document.querySelector("#window-values"), 'window');
+		};
 
-        core.init(update);
-        bars.init(250);
-    </script>
+		core.init(update);
+		bars.init(250);
+	</script>
 </head>
 
 <body translate="no" data-vv-positioning="absolute">
-    <input type="checkbox" id="optBarsHideBars" name="optBarsHideBars" />
-    <div id="inputwrapper"><input type="text" /></div>
+	<input type="checkbox" id="optBarsHideBars" name="optBarsHideBars" />
+	<div id="inputwrapper"><input type="text" /></div>
 
-    <div id="debug">
-        <h1><code>scrollbar-gutter: stable both-edges;</code> Debugger</h1>
-        <div class="warning"><p>Warning: Your browser does not support <code>scrollbar-gutter</code> so this demo won’t work.</p></div>
-        <div id="icb-values"></div>
-        <div id="icb2-values"></div>
-        <div id="lv-values"></div>
-        <div id="s-values"></div>
-        <div id="b-values"></div>
-        <div id="window-values"></div>
-        <div id="eventlog"></div>
-    </div>
+	<div id="debug">
+		<h1><code>scrollbar-gutter: stable both-edges;</code> Debugger</h1>
+		<div class="warning">
+			<p>Warning: Your browser does not support <code>scrollbar-gutter</code> so this demo won’t work.</p>
+		</div>
+		<div id="icb-values"></div>
+		<div id="icb2-values"></div>
+		<div id="lv-values"></div>
+		<div id="s-values"></div>
+		<div id="b-values"></div>
+		<div id="window-values"></div>
+		<div id="eventlog"></div>
+	</div>
 
-    <div id="layoutviewport"></div>
-    <div class="heightdebugger"></div>
+	<div id="layoutviewport"></div>
+	<div class="heightdebugger"></div>
 
-    <div id="bars-absolute">
-        <div class="bar" data-unit="vw" data-position="absolute" style="background-color: rgb(244, 180, 123);"><span class="text">100vw position: absolute (<span class="size">???</span>px)</span></div>
-        <div class="bar" data-unit="lvw" data-position="absolute" style="background-color: rgb(227, 159, 99);"><span class="text">100lvw position: absolute (<span class="size">???</span>px)</span></div>
-        <div class="bar" data-unit="svw" data-position="absolute" style="background-color: rgb(205, 139, 81);"><span class="text">100svw position: absolute (<span class="size">???</span>px)</span></div>
-        <div class="bar" data-unit="dvw" data-position="absolute" style="background-color: rgb(171, 119, 73);"><span class="text">100dvw position: absolute (<span class="size">???</span>px)</span></div>
-        <div class="bar" data-unit="%" data-position="absolute" style="background-color: rgb(128, 100, 77);"><span class="text">100% position: absolute (<span class="size">???</span>px)</span></div>
-    </div>
+	<div id="bars-absolute">
+		<div class="bar" data-unit="vw" data-position="absolute" style="background-color: rgb(244, 180, 123);"><span class="text">100vw position: absolute (<span class="size">???</span>px)</span></div>
+		<div class="bar" data-unit="lvw" data-position="absolute" style="background-color: rgb(227, 159, 99);"><span class="text">100lvw position: absolute (<span class="size">???</span>px)</span></div>
+		<div class="bar" data-unit="svw" data-position="absolute" style="background-color: rgb(205, 139, 81);"><span class="text">100svw position: absolute (<span class="size">???</span>px)</span></div>
+		<div class="bar" data-unit="dvw" data-position="absolute" style="background-color: rgb(171, 119, 73);"><span class="text">100dvw position: absolute (<span class="size">???</span>px)</span></div>
+		<div class="bar" data-unit="%" data-position="absolute" style="background-color: rgb(128, 100, 77);"><span class="text">100% position: absolute (<span class="size">???</span>px)</span></div>
+	</div>
 
-    <div id="bars-fixed">
-        <div class="bar" data-unit="vw" data-position="fixed" style="background-color: rgb(123, 194, 244);"><span class="text">100vw position: fixed (<span class="size">???</span>px)</span></div>
-        <div class="bar" data-unit="lvw" data-position="fixed" style="background-color: rgb(99, 174, 227);"><span class="text">100lvw position: fixed (<span class="size">???</span>px)</span></div>
-        <div class="bar" data-unit="svw" data-position="fixed" style="background-color: rgb(81, 153, 205);"><span class="text">100svw position: fixed (<span class="size">???</span>px)</span></div>
-        <div class="bar" data-unit="dvw" data-position="fixed" style="background-color: rgb(73, 131, 171);"><span class="text">100dvw position: fixed (<span class="size">???</span>px)</span></div>
-        <div class="bar" data-unit="%" data-position="fixed" style="background-color: rgb(77, 106, 128);"><span class="text">100% position: fixed (<span class="size">???</span>px)</span></div>
-    </div>
+	<div id="bars-fixed">
+		<div class="bar" data-unit="vw" data-position="fixed" style="background-color: rgb(123, 194, 244);"><span class="text">100vw position: fixed (<span class="size">???</span>px)</span></div>
+		<div class="bar" data-unit="lvw" data-position="fixed" style="background-color: rgb(99, 174, 227);"><span class="text">100lvw position: fixed (<span class="size">???</span>px)</span></div>
+		<div class="bar" data-unit="svw" data-position="fixed" style="background-color: rgb(81, 153, 205);"><span class="text">100svw position: fixed (<span class="size">???</span>px)</span></div>
+		<div class="bar" data-unit="dvw" data-position="fixed" style="background-color: rgb(73, 131, 171);"><span class="text">100dvw position: fixed (<span class="size">???</span>px)</span></div>
+		<div class="bar" data-unit="%" data-position="fixed" style="background-color: rgb(77, 106, 128);"><span class="text">100% position: fixed (<span class="size">???</span>px)</span></div>
+	</div>
 
-    <button id="btnOptions">options</button>
-    <dialog id="options">
-        <header>
-            <button id="btnOptionsClose">close</button>
-            <h1>Options</h1>
-        </header>
-        <section>
-            <h3>Bars</h3>
-            <div class="option"><label for="optBarsHideBars"> Hide Bars</label></div>
-        </section>
-        <section>
-            <h3>Virtual Keyboard</h3>
-            <div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
-        </section>
-    </dialog>
+	<button id="btnOptions">options</button>
+	<dialog id="options">
+		<header>
+			<button id="btnOptionsClose">close</button>
+			<h1>Options</h1>
+		</header>
+		<section>
+			<h3>Bars</h3>
+			<div class="option"><label for="optBarsHideBars"> Hide Bars</label></div>
+		</section>
+		<section>
+			<h3>Virtual Keyboard</h3>
+			<div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
+		</section>
+	</dialog>
 </body>
+
 </html>

@@ -1,14 +1,15 @@
 *,
 *::after,
 *::before {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
 }
 
 /* This code effectively outlines the ICB */
@@ -19,10 +20,8 @@ html {
 
 body {
 	background-color: aliceblue;
-    background-image:
-		linear-gradient(to right, rgb(0 0 0 / 0.05) 1px, transparent 1px),
-		linear-gradient(to bottom, rgb(0 0 0 / 0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
+	background-image: linear-gradient(to right, rgb(0 0 0 / 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgb(0 0 0 / 0.05) 1px, transparent 1px);
+	background-size: 50px 50px;
 	height: 300%; /* Add some scroll estate */
 	position: relative;
 }
@@ -34,9 +33,7 @@ body {
 	bottom: 0;
 	width: 2em;
 	background: cyan;
-	background-image:
-		linear-gradient(to bottom, darkmagenta 10px, transparent 1px),
-		linear-gradient(to top, slateblue 10px, transparent 1px);
+	background-image: linear-gradient(to bottom, darkmagenta 10px, transparent 1px), linear-gradient(to top, slateblue 10px, transparent 1px);
 	background-size: 100% calc(100% / 3);
 	z-index: -1;
 }
@@ -48,7 +45,7 @@ input {
 
 #debug,
 #visualviewport,
-#layoutviewport {    
+#layoutviewport {
 	padding: 1em;
 	overflow-y: hidden;
 	pointer-events: none;
@@ -89,14 +86,7 @@ input {
 
 #visualviewport {
 	border: 8px solid;
-	border-image: repeating-linear-gradient(
-		45deg,
-		orange,
-		orange 10px,
-		transparent 10px,
-		transparent 20px
-		)
-		10;
+	border-image: repeating-linear-gradient(45deg, orange, orange 10px, transparent 10px, transparent 20px) 10;
 }
 
 #inputwrapper {
@@ -108,7 +98,8 @@ input {
 }
 
 /* Tweak Lists */
-:not(li) > ul, :not(li) > ol {
+:not(li) > ul,
+:not(li) > ol {
 	margin-block-start: 1em;
 	margin-block-end: 1em;
 	padding-inline-start: 2em;
