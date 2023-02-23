@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>ICB Debugger (no meta tag) – Interop 2022 Viewport Investigation Effort Demo Pages</title>
+	<link rel="stylesheet" href="../../base.css" />
+
+	<script type="module">
+		import * as core from '../../core.js';
+
+		const update = () => {
+			document.body.setAttribute('data-vv-positioning', document.querySelector('[name="vvPosition"]:checked')?.value ?? 'absolute');
+
+			const vvv = core.getVisualViewPortValues({
+				clampOffsets: true,
+			});
+			core.syncVisualViewportValuesToCustomProperties(vvv);
+
+			const icbv = core.getICBValues();
+			core.write(icbv, document.querySelector("#icb-values"), 'icb (document.documentElement)');
+
+			const wv = core.getWindowValues();
+			core.write(wv, document.querySelector("#window-values"), 'window');
+		};
+
+		core.init(update);
+	</script>
+</head>
+
+<body translate="no">
+	<div id="inputwrapper"><input type="text" /></div>
+
+	<div id="debug">
+		<h1>ICB Debugger</h1>
+		<div id="icb-values"></div>
+		<div id="window-values"></div>
+	</div>
+
+	<div class="heightdebugger"></div>
+
+	<button id="btnOptions">options</button>
+	<dialog id="options">
+		<header>
+			<button id="btnOptionsClose">close</button>
+			<h1>Options</h1>
+		</header>
+		<section>
+			<h3>Virtual Keyboard</h3>
+			<div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
+		</section>
+	</dialog>
+</body>
+
+</html>
