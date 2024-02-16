@@ -239,6 +239,30 @@ const initOptionsModal = (update) => {
 	// Update after closing the options
 	document.querySelector('#options').addEventListener('close', update);
 };
+
+const initFullscreenToggle = () => {
+	if (!document.querySelector('#optGoFullScreen')) return;
+
+	// Need to put spec names first, as Chrome doesn’t fire events when webkit-prefixed
+	// @see http://crbug.com/1511367
+	const exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen;
+	const requestFullscreen = document.requestFullscreen || document.webkitRequestFullscreen;
+
+	let fullscreen = false;
+	document.querySelector('#optGoFullScreen').addEventListener("click", function () {
+		if (fullscreen) document.exitFullscreen();
+		else document.documentElement.requestFullscreen();
+	});
+	
+	document.addEventListener("fullscreenchange", (e) => {
+		console.log(document.fullscreenElement);
+		fullscreen = document.fullscreenElement ? true : false
+		document.querySelector('#optGoFullScreen').checked = fullscreen;
+		document.querySelector('#options').close(); // Workaround for fullscreen element getting drawn on top of open dialog
+		document.querySelector('#options').showModal(); // Workaround for fullscreen element getting drawn on top of open dialog
+	});
+}
+
 const initVirtualKeyboardIntegration = () => {
 	if (!document.querySelector('#optVirtualKeyboardOverlaysContent')) return;
 
@@ -296,6 +320,7 @@ const init = (update, autoTick = 0) => {
 	initOptionsModal(update);
 	initVirtualKeyboardIntegration();
 	initVisualViewportIntegration();
+	initFullscreenToggle();
 
 	// Update on scroll/resize
 	window.addEventListener('scroll', update, { passive: true });
