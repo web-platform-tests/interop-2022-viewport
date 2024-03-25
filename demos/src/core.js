@@ -120,6 +120,8 @@ const getVisualViewPortValues = ({ clampOffsets = false, resizeDimensions = fals
 			pageLeftOrig,
 			pageTop,
 			pageTopOrig,
+			widthXscale: Math.round(width * scale),
+			heightXscale: Math.round(height * scale),
 		}).filter(([k, v]) => v !== null)
 	);
 };
