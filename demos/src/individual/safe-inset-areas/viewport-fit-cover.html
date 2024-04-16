@@ -37,6 +37,13 @@
 			bottom: env(safe-area-inset-bottom, 0);
 			left: env(safe-area-inset-left, 0);
 		}
+
+		#fixer0 {
+			position: fixed;
+			pointer-events: none;
+			background-color: rgb(0 0 255 / 0.2);
+			inset: 0;
+		}
 	</style>
 </head>
 
@@ -52,6 +59,7 @@
 	<div class="heightdebugger"></div>
 
 	<div id="fixer"></div>
+	<div id="fixer0"></div>
 
 	<button id="btnOptions">options</button>
 	<dialog id="options">
