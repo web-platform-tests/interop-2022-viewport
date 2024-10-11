@@ -44,6 +44,38 @@
 			background-color: rgb(0 0 255 / 0.2);
 			inset: 0;
 		}
+
+		#bottom, #top {
+			position: fixed;
+			height: 5px;
+			pointer-events: none;
+			background: lime;
+			z-index: 1;
+			width: 75vw;
+			left: 12.5vw;
+		}
+		#bottom {
+			bottom: 0;
+		}
+		#top {
+			top: 0
+		}
+
+	#left, #right {
+		position: fixed;
+		width: 5px;
+		pointer-events: none;
+		background: hotpink;
+		z-index: 1;
+		height: 75vh;
+		top: 12.5vh;
+	}
+	#left {
+		left: 0;
+	}
+	#right {
+		right: 0
+	}
 	</style>
 </head>
 
@@ -60,6 +92,11 @@
 
 	<div id="fixer"></div>
 	<div id="fixer0"></div>
+
+	<div id="top"></div>
+	<div id="bottom"></div>
+	<div id="left"></div>
+	<div id="right"></div>
 
 	<button id="btnOptions">options</button>
 	<dialog id="options">
