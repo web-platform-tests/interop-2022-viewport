@@ -4,7 +4,7 @@
   "description": "A collection of demos that allow you to debug and test the behavior of certain viewport and viewport-related aspects",
   "scripts": {
     "start": "serve src",
-	"deploy": "netlify deploy --prod",
+    "deploy": "netlify deploy --prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
