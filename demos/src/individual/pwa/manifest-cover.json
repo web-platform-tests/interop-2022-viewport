@@ -1,0 +1,13 @@
+{
+  "name": "PWA (cover)",
+  "start_url": "cover.html",
+  "id": "interop-2022-viewport.netlify.app/individual/pwa/cover",
+  "icons": [
+    {
+      "src": "https://cdn.glitch.me/d0334cc3-be72-47b5-a25f-d3fbe953f5ff%2Fapple-touch-icon.png?v=1636974061118",
+      "type": "image/png",
+      "sizes": "257x257"
+    }
+  ],
+  "display": "fullscreen"
+}

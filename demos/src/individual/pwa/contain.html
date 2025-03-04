@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Fullscreen PWA – Interop 2022 Viewport Investigation Effort Demo Pages</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=contain" />
+
+  <link rel="manifest" href="manifest-contain.json" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+	<link rel="stylesheet" href="../../base.css" />
+
+	<script type="module">
+		import * as core from '../../core.js';
+
+		const update = () => {
+			document.body.setAttribute('data-vv-positioning', document.querySelector('[name="vvPosition"]:checked')?.value ?? 'absolute');
+
+			const vvv = core.getVisualViewPortValues({
+				clampOffsets: true,
+			});
+			core.syncVisualViewportValuesToCustomProperties(vvv);
+
+			const icbv = core.getICBValues();
+			core.write(icbv, document.querySelector("#icb-values"), 'icb (document.documentElement)');
+
+			const wv = core.getWindowValues();
+			core.write(wv, document.querySelector("#window-values"), 'window');
+		};
+
+		core.init(update);
+	</script>
+	<style>
+		#fixer {
+			position: fixed;
+			pointer-events: none;
+			background-color: rgb(0 255 0 / 0.2);
+			top: env(safe-area-inset-top, 0);
+			right: env(safe-area-inset-right, 0);
+			bottom: env(safe-area-inset-bottom, 0);
+			left: env(safe-area-inset-left, 0);
+		}
+
+		#fixer0 {
+			position: fixed;
+			pointer-events: none;
+			background-color: rgb(0 0 255 / 0.2);
+			inset: 0;
+		}
+
+		#bottom, #top {
+			position: fixed;
+			height: 5px;
+			pointer-events: none;
+			background: lime;
+			z-index: 1;
+			width: 75vw;
+			left: 12.5vw;
+		}
+		#bottom {
+			bottom: 0;
+		}
+		#top {
+			top: 0
+		}
+
+	#left, #right {
+		position: fixed;
+		width: 5px;
+		pointer-events: none;
+		background: hotpink;
+		z-index: 1;
+		height: 75vh;
+		top: 12.5vh;
+	}
+	#left {
+		left: 0;
+	}
+	#right {
+		right: 0
+	}
+	</style>
+</head>
+
+<body translate="no">
+	<div id="inputwrapper"><input type="text" /></div>
+
+	<div id="debug">
+		<h1>PWA <code>fullscreen</code> + <code>viewport-fit=contain</code> + <code>mobile-web-app-capable</code></h1>
+		<div id="icb-values"></div>
+		<div id="window-values"></div>
+	</div>
+
+	<div class="heightdebugger"></div>
+
+	<div id="fixer"></div>
+	<div id="fixer0"></div>
+
+	<div id="top"></div>
+	<div id="bottom"></div>
+	<div id="left"></div>
+	<div id="right"></div>
+
+	<button id="btnOptions">options</button>
+	<dialog id="options">
+		<header>
+			<button id="btnOptionsClose">close</button>
+			<h1>Options</h1>
+		</header>
+		<section>
+			<h3>Virtual Keyboard</h3>
+			<div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
+		</section>
+		<section>
+			<h3>Fullscreen</h3>
+			<div class="option"><input type="checkbox" id="optGoFullScreen" name="optGoFullScreen" /><label for="optGoFullScreen">Fullscreen</label></div>
+		</section>
+	</dialog>
+</body>
+
+</html>
