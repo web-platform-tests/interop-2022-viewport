@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Layout Viewport Debugger – Interop 2022 Viewport Investigation Effort Demo Pages</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="../../base.css" />
+
+	<script type="module">
+		import * as core from '../../core.js';
+
+		const update = () => {
+			document.body.setAttribute('data-vv-positioning', document.querySelector('[name="vvPosition"]:checked')?.value ?? 'absolute');
+
+			const vvv = core.getVisualViewPortValues({
+				clampOffsets: true,
+			});
+			core.syncVisualViewportValuesToCustomProperties(vvv);
+
+			const icbv = core.getICBValues();
+			core.write(icbv, document.querySelector("#icb-values"), 'icb');
+
+			const wv = core.getWindowValues();
+			core.write(wv, document.querySelector("#window-values"), 'window');
+
+			const lv = core.getLayoutViewportValues();
+			core.write(lv, document.querySelector("#lv-values"), 'layout viewport');
+
+			const sv = core.getScreenValues();
+			core.write(sv, document.querySelector("#screen-values"), 'screen');
+		};
+
+		core.init(update);
+	</script>
+
+	<style>
+		#top {
+			position: fixed;
+			bottom: calc(100% - 6px);
+			left: 0;
+			right: 0;
+			height: 100px;
+			background: hotpink;
+			background-image: linear-gradient(to right, rgb(0 0 0 / 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgb(0 0 0 / 0.05) 1px, transparent 1px);
+			background-size: 10px 10px;
+		}
+
+		#bottom {
+			position: fixed;
+			top: calc(100% - 4px);
+			left: 0;
+			right: 0;
+			height: 100px;
+			background: lime;
+			background-image: linear-gradient(to right, rgb(0 0 0 / 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgb(0 0 0 / 0.05) 1px, transparent 1px);
+			background-size: 10px 10px;
+		}
+	</style>
+</head>
+
+<body translate="no">
+	<div id="inputwrapper"><input type="text" /></div>
+
+	<div id="debug">
+		<h1>Layout Viewport Debugger</h1>
+		<div id="window-values"></div>
+		<div id="lv-values"></div>
+		<div id="icb-values"></div>
+		<div id="screen-values"></div>
+	</div>
+
+	<div id="layoutviewport"></div>
+	<div class="heightdebugger"></div>
+
+	<button id="btnOptions">options</button>
+	<dialog id="options">
+		<header>
+			<button id="btnOptionsClose">close</button>
+			<h1>Options</h1>
+		</header>
+		<section>
+			<h3>Virtual Keyboard</h3>
+			<div class="option"><input type="checkbox" id="optVirtualKeyboardOverlaysContent" name="optVirtualKeyboardOverlaysContent" /><label for="optVirtualKeyboardOverlaysContent">Virtual Keyboard Overlays Content</label></div>
+		</section>
+		<section>
+			<h3>Fullscreen</h3>
+			<div class="option"><input type="checkbox" id="optGoFullScreen" name="optGoFullScreen" /><label for="optGoFullScreen">Fullscreen</label></div>
+		</section>
+	</dialog>
+
+	<div id="top"></div>
+	<div id="bottom"></div>
+</body>
+
+</html>
